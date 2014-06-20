@@ -14,7 +14,7 @@ import com.darkflame.client.semantic.SSSNode;
 import com.darkflame.client.semantic.QueryEngine.DoSomethingWithNodesRunnable;
 
 import lostagain.nl.core.interfaces.Software;
-import lostagain.nl.utilities.GameTimer;
+import lostagain.nl.core.utilities.GameTimer;
 import playn.core.Color;
 import playn.core.Font;
 import playn.core.Game;

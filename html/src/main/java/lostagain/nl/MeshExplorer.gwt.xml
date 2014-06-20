@@ -1,6 +1,6 @@
 <module rename-to='meshexplorer'>
   <inherits name='playn.PlayN'/>
-  
+   <inherits name="com.google.common.collect.Collect"/>
 	<inherits name='com.darkflame.SuperSimpleSemantics'/>
 
   <inherits name='MeshExplorerAssets'/>

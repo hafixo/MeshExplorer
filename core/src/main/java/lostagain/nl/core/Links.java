@@ -9,7 +9,7 @@ import playn.core.Color;
 import playn.core.util.Callback;
 import lostagain.nl.core.Link.LinkMode;
 import lostagain.nl.core.interfaces.Software;
-import lostagain.nl.utilities.GameTimer;
+import lostagain.nl.core.utilities.GameTimer;
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Group;

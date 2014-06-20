@@ -53,6 +53,18 @@
       <classifier>sources</classifier>
     </dependency>
     
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>17.0</version>
+    </dependency>
+    
+      <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-gwt</artifactId>
+      <version>17.0</version>
+    </dependency>
+    
 <dependency>
     <groupId>com.threerings</groupId>
     <artifactId>tripleplay</artifactId>
@@ -63,15 +75,9 @@
  <dependency>
             <groupId>com.darkflame</groupId>
             <artifactId>SuperSimpleSemantics</artifactId>
-            <version>1.0</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.darkflame</groupId>
-            <artifactId>SuperSimpleSemantics</artifactId>
-            <version>1.0</version>
-            <classifier>sources</classifier>
-            <scope>provided</scope>
-        </dependency>
+
         
     <!-- Start Google App Engine dependencies -->
     <!-- These can be removed if you don't wish to deploy to Google App Engine -->
@@ -108,6 +114,10 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
+           <!-- we need class metadata, override PlayN's disabling of such -->
+        <configuration>
+          <disableClassMetadata>false</disableClassMetadata>
+        </configuration>
         <executions>
           <execution>
             <phase>prepare-package</phase>
