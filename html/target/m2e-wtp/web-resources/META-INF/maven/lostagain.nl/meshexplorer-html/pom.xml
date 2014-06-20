@@ -61,12 +61,12 @@
 </dependency>
 
  <dependency>
-            <groupId>com.darkflame.SuperSimpleSemantics</groupId>
+            <groupId>com.darkflame</groupId>
             <artifactId>SuperSimpleSemantics</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.darkflame.SuperSimpleSemantics</groupId>
+            <groupId>com.darkflame</groupId>
             <artifactId>SuperSimpleSemantics</artifactId>
             <version>1.0</version>
             <classifier>sources</classifier>
