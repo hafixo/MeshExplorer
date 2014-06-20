@@ -1,0 +1,18 @@
+@prefix drwhoswho: <http://darkflame.co.uk/ontology/drwhoswho.n3#> 
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+@prefix owl: <http://www.w3.org/2002/07/owl#>
+@prefix me: <http://darkflame.co.uk/meshexplorer#> 
+ 
+bobspc rdfs:subClassOf  me:Computer.
+alicespc rdfs:subClassOf  me:Computer.
+
+parentspc  me:visibleTo me:everyone.
+bobspc me:visibleTo me:everyone.
+alicespc me:visibleTo bobspc.
+
+bobspc  me:SecuredBy MaxsFirewall.
+MaxsFirewall rdfs:subClassOf  me:Security.
+MaxsFirewall  me:queryPass "(query text here - anything matching this query breaks the firewall)".
+MaxsFirewall  me:clueText "Hint here".
+MaxsFirewall  me:textPass "Password12345".
