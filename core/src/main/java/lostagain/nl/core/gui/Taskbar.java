@@ -1,6 +1,7 @@
-package lostagain.nl.core;
+package lostagain.nl.core.gui;
 
 import static playn.core.PlayN.assets;
+import lostagain.nl.core.NetworkNodeScreen;
 import playn.core.Color;
 import playn.core.Image;
 import react.Slot;

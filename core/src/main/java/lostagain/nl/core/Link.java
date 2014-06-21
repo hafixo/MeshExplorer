@@ -21,6 +21,9 @@ import tripleplay.util.Colors;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
+
+import lostagain.nl.core.StaticSSSNodes;
+
 public class Link extends Group {
 
 	Button gotoLinkButton;
@@ -46,15 +49,6 @@ public class Link extends Group {
 	LinkMode currentMode =  LinkMode.Unknown;
 	boolean ComputerOpen;
 	SSSNode linksToThisPC;
-	//----
-	static final SSSNode VISIBLETO = SSSNode.createSSSNode(MeshExplorer.INTERNALNS+"visibleto", MeshExplorer.INTERNALNS);
-	static final SSSNode EVERYONE =  SSSNode.createSSSNode(MeshExplorer.INTERNALNS+"everyone", MeshExplorer.INTERNALNS);
-	static final SSSNode Computer =  SSSNode.createSSSNode(MeshExplorer.INTERNALNS+"computer", MeshExplorer.INTERNALNS);
-	static final SSSNode SecuredBy =  SSSNode.createSSSNode(MeshExplorer.INTERNALNS+"SecuredBy", MeshExplorer.INTERNALNS);
-	static final SSSNode Security =  SSSNode.createSSSNode(MeshExplorer.INTERNALNS+"Security", MeshExplorer.INTERNALNS);
-	static final SSSNode queryPass =  SSSNode.createSSSNode(MeshExplorer.INTERNALNS+"queryPass", MeshExplorer.INTERNALNS);
-	static final SSSNode clueText =  SSSNode.createSSSNode(MeshExplorer.INTERNALNS+"clueText", MeshExplorer.INTERNALNS);
-	static final SSSNode textPass =  SSSNode.createSSSNode(MeshExplorer.INTERNALNS+"textPass", MeshExplorer.INTERNALNS);
 
 	public Link(String name,final String location,Links parent, boolean ComputerOpen) {
 
@@ -223,7 +217,7 @@ public class Link extends Group {
 		//detect if its secured by anything 
 		if (linksToThisPC!=null){
 			
-			ArrayList<SSSNode> allSecuredPCs = SSSNodesWithCommonProperty.getAllNodesWithPredicate(SecuredBy);
+			ArrayList<SSSNode> allSecuredPCs = SSSNodesWithCommonProperty.getAllNodesWithPredicate(StaticSSSNodes.SecuredBy);
 			
 			if (allSecuredPCs.contains(linksToThisPC)){
 				ComputerOpen = false;

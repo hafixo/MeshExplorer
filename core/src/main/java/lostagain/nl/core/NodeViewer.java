@@ -9,12 +9,18 @@ import tripleplay.ui.layout.AxisLayout;
 public class NodeViewer extends Group implements Software {
 
 	public NodeViewer() {
-		super(AxisLayout.vertical());
+		super(AxisLayout.vertical().offStretch());
 		  super.setConstraint(AxisLayout.stretched());
+		
+		  
 		//a few tests
 		super.add(new Label("test"));
 		super.add(new Label("test2"));
-		super.add(new Label("test3"));
+		Label spacer = new Label("test3");
+		
+		spacer.setConstraint(AxisLayout.stretched());
+		
+		super.add(spacer);
 	}
 
 	@Override

@@ -40,6 +40,7 @@ import tripleplay.ui.Stylesheet;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.BorderLayout;
 import tripleplay.util.Colors;
+import lostagain.nl.core.gui.*;
 
 import com.darkflame.client.interfaces.SSSGenericFileManager;
 
@@ -51,6 +52,8 @@ public class MeshExplorer extends Game.Default {
 	 private GroupLayer base;
 	  private Interface iface;
 	  private GroupLayer layer;
+	  static NavigationBar NavigationTopBar= new NavigationBar();
+	  
 	  
 	  static Email emailpage;
 	  static NodeViewer nodepage;
@@ -67,6 +70,9 @@ public class MeshExplorer extends Game.Default {
 	
 	public final static String INTERNALNS = "http://darkflame.co.uk/meshexplorer#";
 	public static SSSNode mycomputerdata = SSSNode.createSSSNode("HomeMachine",INTERNALNS);
+
+	/** Used to tell if the player is at their home pc **/
+	private static boolean isAtHome=true;
 
 	  
   public MeshExplorer(SSSGenericFileManager platformSpecificFileLoader) {
@@ -108,20 +114,22 @@ public class MeshExplorer extends Game.Default {
 //	System.out.print(Wood.getDirectParentsAsString());
 	
 	  
-	  String CurrentLocation = "";
+	 // String CurrentLocation = "";
+	 // NavigationTopBar.setLocation(CurrentLocation);
+	  
 	  
 	  layer = graphics().createGroupLayer();
 	
 	  
 	 // ScreenStack test = new ScreenStack();
 	  
-	  Screen screen1 = new NetworkNodeScreen(Colors.BLUE,mycomputerdata);
+	 // Screen screen1 =   new NetworkNodeScreen(Colors.BLUE,mycomputerdata);
 	
 	  
 	  
 	 // createLayout(CurrentLocation);
 	        
-	  _screens.push(screen1);
+	 // _screens.push(screen1);
 	     
 		  
     
@@ -230,10 +238,19 @@ public class MeshExplorer extends Game.Default {
 //	     graphics().rootLayer().add(root.layer);
 //}
 //  
-  private void loadFirstPC() {
-	  loadNodesData(mycomputerdata);
-  }
   
+  private void loadFirstPC() {
+	  
+	  
+		MeshExplorer.gotoLocation(mycomputerdata);
+		
+		//we have to update the bar specially for the first pc
+		_screens.top().wasShown();
+	  
+	 // loadNodesData(mycomputerdata);
+  }
+
+ /*
   
   private void loadNodesData(SSSNode mycomputerdata) {
 	  System.out.print("loading node:"+mycomputerdata);
@@ -243,7 +260,6 @@ public class MeshExplorer extends Game.Default {
 	  getVisibleMachines(mycomputerdata);
 	  
 }
-  
   
 	private void getVisibleMachines(SSSNode tothisnode){
 		   
@@ -279,7 +295,8 @@ public class MeshExplorer extends Game.Default {
 		
 		
 	}
-	
+	*/
+	/*
 protected void populateVisibleComputers(ArrayList<SSSNode> testresult) {
 		Log.info("computers visible to this = "+testresult.size());
 		
@@ -292,7 +309,7 @@ protected void populateVisibleComputers(ArrayList<SSSNode> testresult) {
 		
 		
 	}
-
+*/
 
 
 
@@ -346,10 +363,51 @@ protected void populateVisibleComputers(ArrayList<SSSNode> testresult) {
   
 public static void gotoLocation(SSSNode linksToThisPC) {
 	
-	  Screen screen1 = new NetworkNodeScreen(Colors.CYAN,linksToThisPC);
-		        
-	  _screens.push(screen1);
+	  //The user is considered to be home straight away, if they are heading home
+	  // we dont wait till after the "push" animation
+      // because the "new network node" being created makes use of this variable
+	  if (linksToThisPC.equals(mycomputerdata)){
+		  isAtHome = true;
+	  } else {
+		  isAtHome = false;		  
+	  }
+	  
+	  //get the node screen.
+	  //This will automatically check if it already exists
+	  //else it will create a new one
+	  NetworkNodeScreen screen1 = NetworkNodeScreen.getNetworkNode(Colors.CYAN,linksToThisPC);	
+	  
+	  //find is the screen exists, if it does, we display it
+	  if (_screens.find(screen1)!=null){
+		  
+		  _screens.popTo(screen1);		  
+		  
+	  } else {
+		  //else we add it to the screenstack at the top so its automatically displayed
+		  _screens.push(screen1);
+		  
+	  }
+	  
+	  
+	  
 	
 }
+
+
+public static void gotoHomeNode() {
+	
+	 gotoLocation(mycomputerdata);
+	 
+	
+}
+
+/** Determines if the player is home or not **/
+
+public static boolean isHome() {
+	
+	return isAtHome;
+}
+
+
   
 }

@@ -60,9 +60,11 @@ public class Email  implements Software {
 	            Colors.CYAN, Colors.brighter(Colors.CYAN), Colors.darker(Colors.CYAN)).inset(5)));
 	   
 	        
-	        mainGroup = new Group(AxisLayout.vertical()).add(
+	        mainGroup = new Group(AxisLayout.vertical().offStretch()).add(
 		            top, historyBox.setConstraint(AxisLayout.stretched())).addStyles(
 		    	            Style.BACKGROUND.is(Background.blank().inset(5)));
+	        mainGroup.setConstraint(AxisLayout.stretched());
+	        
 	        return mainGroup;
 	    }
 

@@ -1,7 +1,6 @@
 package lostagain.nl.core;
 
 import static playn.core.PlayN.log;
-
 import tripleplay.game.UIScreen;
 import tripleplay.ui.Background;
 import tripleplay.ui.Layout;
@@ -21,7 +20,7 @@ public abstract class GameScreen extends UIScreen
     @Override public void wasAdded () {
         super.wasAdded();
         _root = iface.createRoot(createLayout(), stylesheet(), layer);
-       // _root.addStyles(Style.BACKGROUND.is(background()));
+     //  _root.addStyles(Style.BACKGROUND.is(background()));
         _root.setSize(width(), height());
         createIface();
     }
@@ -29,6 +28,8 @@ public abstract class GameScreen extends UIScreen
     @Override public void wasShown () {
         super.wasShown();
         log().info(this + ".wasShown()");
+        
+		
     }
 
     @Override public void wasHidden () {
@@ -36,11 +37,14 @@ public abstract class GameScreen extends UIScreen
         log().info(this + ".wasHidden()");
     }
 
+    /** Note; Screens dont get destroyed when removed, as they can still be active in the background.
+     * If we need a specific destruction it should only happen if they are unactive,
+     * ans removed from the NetowrkNode list too **/
     @Override public void wasRemoved () {
         super.wasRemoved();
-        log().info(this + ".wasRemoved()");
-        layer.destroy();
-        iface.destroyRoot(_root);
+        //log().info(this + ".wasRemoved()");
+       // layer.destroy();
+       // iface.destroyRoot(_root);
     }
 
     @Override public void showTransitionCompleted () {
@@ -61,12 +65,6 @@ public abstract class GameScreen extends UIScreen
     /** Creates the layout for the interface root. The default is a vertical axis layout. */
     protected Layout createLayout () {
         return AxisLayout.vertical();
-    }
-
-    /** Returns the background to use for this screen. */
-    protected Background background () {
-        int borderColor = (4 % 2 == 0) ? 0xFF99CCFF : 0xFFCC99FF;
-        return Background.bordered(0xFFCCCCCC, borderColor, 15).inset(15, 10);
     }
 
     /** Override this method and create your UI in it. Add elements to {@link #_root}. */
