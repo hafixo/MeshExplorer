@@ -23,7 +23,14 @@ public class HTMLFileManager implements SSSGenericFileManager  {
 	/** If the game is running from a local source, php is naturally not used.
 	 * Because of this, files are accessed directly at this location,
 	 * rather then via "textfetcher.php **/
-	public static String LocalFolderLocation = "localloc"; //JAM.theme.get("localloc");
+	public static String LocalFolderLocation = ""; //JAM.theme.get("localloc");
+
+	enum fetchmode {
+		local,remote
+	}
+	
+	static fetchmode currrentmode = fetchmode.local;
+	
 	
 	/** The location and name of the textfetcher.php that returns requested text files **/
 	public static final String textfetcher_url = "text%20fetcher.php"; //$NON-NLS-1$
@@ -96,7 +103,7 @@ public class HTMLFileManager implements SSSGenericFileManager  {
 		};
 		
 		
-		if (LocalFolderLocation.length()<3) {
+		if (currrentmode==fetchmode.local) {
 			RequestBuilder requestBuilder = new RequestBuilder(
 					RequestBuilder.POST, textfetcher_url);
 
