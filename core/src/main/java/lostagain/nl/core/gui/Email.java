@@ -1,4 +1,4 @@
-package lostagain.nl.core;
+package lostagain.nl.core.gui;
 
 import react.Slot;
 import react.UnitSlot;

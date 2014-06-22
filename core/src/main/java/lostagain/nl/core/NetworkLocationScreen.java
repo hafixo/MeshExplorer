@@ -10,6 +10,9 @@ import java.util.logging.Logger;
 
 import javax.swing.SpringLayout.Constraints;
 
+import lostagain.nl.core.gui.Email;
+import lostagain.nl.core.gui.Links;
+import lostagain.nl.core.gui.LocationDetailsViewer;
 import lostagain.nl.core.gui.NavigationBar;
 import lostagain.nl.core.gui.Taskbar;
 import lostagain.nl.core.interfaces.Software;
@@ -37,7 +40,7 @@ import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.BorderLayout;
 import tripleplay.util.Colors;
 
-public class NetworkNodeScreen extends GameScreen implements Predicate  {
+public class NetworkLocationScreen extends GameScreen implements Predicate  {
 	int BackCol;
 
 
@@ -45,11 +48,11 @@ public class NetworkNodeScreen extends GameScreen implements Predicate  {
 	  
 	  Group Top;
 
-	private static HashMap<SSSNode,NetworkNodeScreen> knownLocations=new HashMap<SSSNode,NetworkNodeScreen>();
+	private static HashMap<SSSNode,NetworkLocationScreen> knownLocations=new HashMap<SSSNode,NetworkLocationScreen>();
 	
 	
 	   Email emailpage;
-	   NodeViewer nodepage;
+	   LocationDetailsViewer nodepage;
 	   Links linkpage= new Links(this);
 
 	  Software CurrentlyOpen = emailpage;
@@ -62,7 +65,7 @@ public class NetworkNodeScreen extends GameScreen implements Predicate  {
 	
 	
 	  
-	private NetworkNodeScreen(int col,SSSNode networkNode) {		
+	private NetworkLocationScreen(int col,SSSNode networkNode) {		
 		super();
 		BackCol = col;
 		this.networkNode=networkNode;
@@ -117,6 +120,8 @@ private void createLayout(String CurrentLocation) {
 	
 	BorderLayout border = new BorderLayout(3);
 	  Group mainLayout = new Group(border);
+
+	  mainLayout.setConstraint(AxisLayout.stretched());
 	  
 	   Top    = new Group(AxisLayout.horizontal(), Style.HALIGN.center).
 			    setConstraint(BorderLayout.NORTH);
@@ -161,7 +166,7 @@ private void createLayout(String CurrentLocation) {
 	     
 	    
 	     //create all pages hidden
-	     nodepage = new NodeViewer();
+	     nodepage = new LocationDetailsViewer();
 	     nodepage.Hide();
 	     
 	 //    linkpage = new Links();
@@ -187,15 +192,14 @@ private void createLayout(String CurrentLocation) {
 	  mainLayout.add(Bottom);
 	  mainLayout.add(Left);
 	  //mainLayout.add(Right);
-	  
-	  Button test = new Button("test");
-	  test.setConstraint(BorderLayout.CENTER);
-	  mainLayout.add(test);
+		  
+		// Button test = new Button("test");
+		//  test.setConstraint(BorderLayout.CENTER);
+	  mainLayout.add(Center);
 	 
 	   Background mls = Background.solid(BackCol);	
 	  mainLayout.addStyles(Style.BACKGROUND.is(mls));
 	  
-	  mainLayout.setConstraint(AxisLayout.stretched());
 	  
 	    // create our UI manager and configure it to process pointer events
 	   // iface = new Interface();
@@ -312,14 +316,14 @@ public  void gotoEmail() {
 
 
 
-public static NetworkNodeScreen getNetworkNode(int cyan, SSSNode linksToThisPC) {
+public static NetworkLocationScreen getNetworkNode(int cyan, SSSNode linksToThisPC) {
 	
-	NetworkNodeScreen existingLocation = knownLocations.get(linksToThisPC);
+	NetworkLocationScreen existingLocation = knownLocations.get(linksToThisPC);
 	
 
 	if (existingLocation==null) {		
 		//if theres none already existing we try creating a new one
-		existingLocation = new NetworkNodeScreen( cyan,  linksToThisPC);
+		existingLocation = new NetworkLocationScreen( cyan,  linksToThisPC);
 
 	} else {
 		

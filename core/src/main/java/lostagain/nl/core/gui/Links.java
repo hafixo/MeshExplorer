@@ -1,4 +1,4 @@
-package lostagain.nl.core;
+package lostagain.nl.core.gui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,7 +7,8 @@ import com.darkflame.client.semantic.SSSNode;
 
 import playn.core.Color;
 import playn.core.util.Callback;
-import lostagain.nl.core.Link.LinkMode;
+import lostagain.nl.core.NetworkLocationScreen;
+import lostagain.nl.core.gui.Link.LinkMode;
 import lostagain.nl.core.interfaces.Software;
 import lostagain.nl.core.utilities.GameTimer;
 import tripleplay.ui.Background;
@@ -25,7 +26,7 @@ public class Links extends Group implements Software {
 	ArrayList<Link> linksBeingScanned = new ArrayList<Link>();
 	final GameTimer linkscanner;
 
-	public Links(NetworkNodeScreen parent) {
+	public Links(NetworkLocationScreen parent) {
 		
 		super(AxisLayout.vertical().gap(15).offStretch());
 		super.setConstraint(AxisLayout.stretched());

@@ -1,4 +1,4 @@
-package lostagain.nl.core;
+package lostagain.nl.core.gui;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ import tripleplay.util.Colors;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
-
+import lostagain.nl.core.MeshExplorer;
 import lostagain.nl.core.StaticSSSNodes;
 
 public class Link extends Group {

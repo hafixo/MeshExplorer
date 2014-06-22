@@ -56,7 +56,7 @@ public class MeshExplorer extends Game.Default {
 	  
 	  
 	  static Email emailpage;
-	  static NodeViewer nodepage;
+	  static LocationDetailsViewer nodepage;
 	//  static Links linkpage= new Links();
 	  
 	  static Software CurrentlyOpen = emailpage;
@@ -375,7 +375,7 @@ public static void gotoLocation(SSSNode linksToThisPC) {
 	  //get the node screen.
 	  //This will automatically check if it already exists
 	  //else it will create a new one
-	  NetworkNodeScreen screen1 = NetworkNodeScreen.getNetworkNode(Colors.CYAN,linksToThisPC);	
+	  NetworkLocationScreen screen1 = NetworkLocationScreen.getNetworkNode(Colors.CYAN,linksToThisPC);	
 	  
 	  //find is the screen exists, if it does, we display it
 	  if (_screens.find(screen1)!=null){

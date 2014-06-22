@@ -1,7 +1,7 @@
 package lostagain.nl.core.gui;
 
 import static playn.core.PlayN.assets;
-import lostagain.nl.core.NetworkNodeScreen;
+import lostagain.nl.core.NetworkLocationScreen;
 import playn.core.Color;
 import playn.core.Image;
 import react.Slot;
@@ -33,7 +33,7 @@ public class Taskbar extends Group {
     }
     */
 	
-	public Taskbar(final NetworkNodeScreen parent) {
+	public Taskbar(final NetworkLocationScreen parent) {
 		super(AxisLayout.vertical().gap(30));
 		
 		///super.fillHeight();

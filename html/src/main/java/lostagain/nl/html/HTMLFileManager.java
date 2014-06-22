@@ -103,7 +103,7 @@ public class HTMLFileManager implements SSSGenericFileManager  {
 		};
 		
 		
-		if (currrentmode==fetchmode.local) {
+		if (currrentmode==fetchmode.remote) {
 			RequestBuilder requestBuilder = new RequestBuilder(
 					RequestBuilder.POST, textfetcher_url);
 
