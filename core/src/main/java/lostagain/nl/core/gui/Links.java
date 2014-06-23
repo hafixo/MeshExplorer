@@ -17,24 +17,35 @@ import tripleplay.ui.Group;
 import tripleplay.ui.Label;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Style;
+import tripleplay.ui.Styles;
 import tripleplay.ui.layout.AxisLayout;
+import tripleplay.util.Colors;
 
 public class Links extends Group implements Software {
 	
-	int ScanSpeed = 10;
-	
+	int ScanSpeed = 10;	
 	ArrayList<Link> linksBeingScanned = new ArrayList<Link>();
 	final GameTimer linkscanner;
+	
+	Label title = new Label ("Link page");
 
+	/** a page on a location that displays all the other locations
+	 * this location knows about 
+	 * **/
 	public Links(NetworkLocationScreen parent) {
 		
 		super(AxisLayout.vertical().gap(15).offStretch());
 		super.setConstraint(AxisLayout.stretched());
 		super.setStyles(Style.BACKGROUND.is(Background.solid(Color.argb(255, 50,50, 155))));
 		
+		 Styles tableStyles = Styles.make(Style.BACKGROUND.is(Background.bordered(Color.argb(0, 0, 0, 0),Colors.WHITE,3)),
+		            Style.VALIGN.top);
+		 
+		 super.addStyles(tableStyles);
+		
+		super.add(title);
 		
 		
-		//a few tests
 		//setup scanner
 		
 	 linkscanner = new GameTimer(200, new Callback<String>(){

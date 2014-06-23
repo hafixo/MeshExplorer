@@ -66,7 +66,7 @@ public class Taskbar extends Group {
 				 
 		 this.add(emailButton);
 		 
-		 Image networkicon = assets().getImage("images/network.png").subImage(0,0, 64, 64);
+		 Image networkicon = assets().getImage("images/shortcut.png").subImage(0,0, 64, 64);
 		 ImageButton gotoNodeViewer = new ImageButton(networkicon);
 		// Button gotoNodeViewer = new Button("NodeViewer");
 		 
@@ -78,7 +78,8 @@ public class Taskbar extends Group {
 		 
 		 this.add(gotoNodeViewer);
 
-		 Image shortcuticon = assets().getImage("images/shortcut.png").subImage(0,0, 64, 64);
+		 Image shortcuticon = assets().getImage("images/network.png").subImage(0,0, 64, 64); 
+				 
 		ImageButton gotoLinks = new ImageButton(shortcuticon);
 		
 		 //Button gotoLinks = new Button("Links");

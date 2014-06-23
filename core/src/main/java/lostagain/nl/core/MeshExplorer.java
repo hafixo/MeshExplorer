@@ -337,6 +337,9 @@ protected void populateVisibleComputers(ArrayList<SSSNode> testresult) {
     if (iface != null) {
       iface.paint(_clock);
     }
+    
+    
+    
   }
 
   /** Returns the stylesheet to use for this screen. */

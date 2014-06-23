@@ -24,6 +24,7 @@ import com.darkflame.client.semantic.SSSNode;
 import com.darkflame.client.semantic.QueryEngine.DoSomethingWithNodesRunnable;
 
 import playn.core.Color;
+import playn.core.util.Clock;
 import tripleplay.game.Screen;
 import tripleplay.game.ScreenStack.Predicate;
 import tripleplay.ui.Background;
@@ -332,6 +333,18 @@ public static NetworkLocationScreen getNetworkNode(int cyan, SSSNode linksToThis
 	return existingLocation;
 }
 
+@Override 
+public void paint (Clock clock) {
+	  super.paint(clock);
+	  
+}
+
+@Override 
+public void update (int delta) {
+    super.update(delta);
+    nodepage.update(delta);
+    
+}
 
 @Override
 /** really unintuatively named method that determines if the supplied screen is the same as this one **/
