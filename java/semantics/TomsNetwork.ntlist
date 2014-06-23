@@ -4,15 +4,19 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#>
 @prefix me: <http://darkflame.co.uk/meshexplorer#> 
  
-bobspc rdfs:subClassOf  me:Computer.
+maxspc rdfs:subClassOf  me:Computer.
 alicespc rdfs:subClassOf  me:Computer.
+thecatspc rdfs:subClassOf  me:Computer.
 
-parentspc  me:visibleTo me:everyone.
-bobspc me:visibleTo me:everyone.
-alicespc me:visibleTo bobspc.
+maxspc me:visibleTo me:everyone.
+alicespc me:visibleTo thecatspc.
+thecatspc me:visibleTo me:everyone.
 
-bobspc  me:SecuredBy MaxsFirewall.
+maxspc me:SecuredBy MaxsFirewall.
 MaxsFirewall rdfs:subClassOf  me:Security.
-MaxsFirewall  me:queryPass "(query text here - anything matching this query breaks the firewall)".
-MaxsFirewall  me:clueText "Hint here".
-MaxsFirewall  me:textPass "Password12345".
+MaxsFirewall me:queryPass "(query text here - anything matching this query breaks the firewall)".
+MaxsFirewall me:clueText "Hint here".
+MaxsFirewall me:textPass "Password12345".
+
+alicespccontents.txt rdfs:subClassOf me:software
+alicespccontents.txt me:ison alicespc

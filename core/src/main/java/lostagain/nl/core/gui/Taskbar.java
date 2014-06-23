@@ -32,6 +32,15 @@ public class Taskbar extends Group {
         public boolean isStretch () { return _stretch; }
     }
     */
+	ImageButton securityButton;
+	
+
+	String lockediconloc = "images/locked.png";
+	Image lockedicon = assets().getImage(lockediconloc).subImage(0,0, 64, 64);
+
+	String unlockediconloc = "images/unlocked.png";
+	Image unlockedicon = assets().getImage(unlockediconloc).subImage(0,0, 64, 64);
+	
 	
 	public Taskbar(final NetworkLocationScreen parent) {
 		super(AxisLayout.vertical().gap(30));
@@ -50,49 +59,69 @@ public class Taskbar extends Group {
 		
 		this.setConstraint(AxisLayout.stretched());
 		
-		 Image emailicon = assets().getImage("images/email.png").subImage(0,0, 64, 64);
+		securityButton = addButton(parent, lockediconloc,new UnitSlot() {
+	        @Override public void onEmit () {
+	        	parent.gotoLinks();
+	        }
+	    });
 		
-		 ImageButton emailButton = new ImageButton(emailicon);
-		
-		 
-		 
-		// Button gotoEmail = new Button("Email");
-		 emailButton.clicked().connect(new UnitSlot() {
-	            @Override public void onEmit () {
-	            	parent.gotoEmail();
-	            }
-	        });
-		 
-				 
-		 this.add(emailButton);
-		 
-		 Image networkicon = assets().getImage("images/shortcut.png").subImage(0,0, 64, 64);
-		 ImageButton gotoNodeViewer = new ImageButton(networkicon);
-		// Button gotoNodeViewer = new Button("NodeViewer");
-		 
-		 gotoNodeViewer.clicked().connect(new UnitSlot() {
-	            @Override public void onEmit () {
-	            	parent.gotoNodeViewer();
-	            }
-	        });
-		 
-		 this.add(gotoNodeViewer);
+		String emailiconloc = "images/email.png";
+		addButton(parent, emailiconloc,new UnitSlot() {
+	        @Override public void onEmit () {
+	        	parent.gotoEmail();
+	        }
+	    });
 
-		 Image shortcuticon = assets().getImage("images/network.png").subImage(0,0, 64, 64); 
-				 
-		ImageButton gotoLinks = new ImageButton(shortcuticon);
+		String contentsiconloc = "images/contents.png";
+		addButton(parent, contentsiconloc,new UnitSlot() {
+	        @Override public void onEmit () {
+	        	parent.gotoContents();
+	        }
+	    });
 		
-		 //Button gotoLinks = new Button("Links");
-		 
-		 gotoLinks.clicked().connect(new UnitSlot() {
-	            @Override public void onEmit () {
-	            	parent.gotoLinks();
-	            }
-	        });
-		 
-		 this.add(gotoLinks);
-		 
+		String shortcuticonloc = "images/shortcut.png";
+		 addButton(parent, shortcuticonloc,new UnitSlot() {
+		        @Override public void onEmit () {
+		        	parent.gotoNodeViewer();
+		        }
+		    });
+
+			String networkiconloc = "images/network.png";
+			addButton(parent, networkiconloc,new UnitSlot() {
+		        @Override public void onEmit () {
+		        	parent.gotoLinks();
+		        }
+		    });
+			 
+		
+	
 	}
+	
+	public void setSecurityIconOn(Boolean status){
+		
+		if (status){
+			securityButton.setDown(lockedicon);
+			securityButton.setUp(lockedicon);
+		} else {
+			securityButton.setDown(unlockedicon);
+			securityButton.setUp(unlockedicon);
+		}
+		
+	}
+	
+
+private ImageButton addButton(final NetworkLocationScreen parent, String iconloc, UnitSlot response) {
+	Image icon = assets().getImage(iconloc).subImage(0,0, 64, 64);
+	
+	
+	 ImageButton newButton = new ImageButton(icon);
+	
+	 newButton.clicked().connect(response);
+	 			 
+	 this.add(newButton);
+	 
+	 return newButton;
+}
 	
 	
 	

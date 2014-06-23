@@ -12,7 +12,8 @@ import javax.swing.SpringLayout.Constraints;
 
 import lostagain.nl.core.gui.Email;
 import lostagain.nl.core.gui.Links;
-import lostagain.nl.core.gui.LocationDetailsViewer;
+import lostagain.nl.core.gui.LocationSecurityCracker;
+import lostagain.nl.core.gui.LocationsContents;
 import lostagain.nl.core.gui.NavigationBar;
 import lostagain.nl.core.gui.Taskbar;
 import lostagain.nl.core.interfaces.Software;
@@ -21,6 +22,7 @@ import com.darkflame.client.query.Query;
 import com.darkflame.client.query.QueryElement;
 import com.darkflame.client.semantic.QueryEngine;
 import com.darkflame.client.semantic.SSSNode;
+import com.darkflame.client.semantic.SSSNodesWithCommonProperty;
 import com.darkflame.client.semantic.QueryEngine.DoSomethingWithNodesRunnable;
 
 import playn.core.Color;
@@ -45,33 +47,68 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 	int BackCol;
 
 
+	
+	
 	static Logger Log = Logger.getLogger("NetworkNodeScreen");
 	  
 	  Group Top;
 
 	private static HashMap<SSSNode,NetworkLocationScreen> knownLocations=new HashMap<SSSNode,NetworkLocationScreen>();
 	
-	
-	   Email emailpage;
-	   LocationDetailsViewer nodepage;
-	   Links linkpage= new Links(this);
-
+	 Taskbar maintaskbar;
+	 
+	//various pages on this computer
+	 LocationSecurityCracker securityPage  = new LocationSecurityCracker();
+	 Email emailpage  = new Email();	  
+	 Links linkpage= new Links(this);
+	 LocationsContents contents = new LocationsContents(this);
+	 
+	 //page currently open
 	  Software CurrentlyOpen = emailpage;
 
 
 	private SSSNode networkNode;
 
+	Boolean locked = true; //while its locked you can only access the security page
+	
+	
 
 	private boolean setupdone=false;
 	
 	
 	  
-	private NetworkLocationScreen(int col,SSSNode networkNode) {		
+	private NetworkLocationScreen(int col,SSSNode locationsNode) {		
 		super();
+		
+		//first we work out if this page is locked or not
+		
+		//if its the home computer it is always unlocked
+		if (locationsNode == MeshExplorer.mycomputerdata){
+			locked = false;
+		} else {
+			
+			//we check if its got security associated with it
+			//we could optimise to skip this check if  we already know its secured
+			//incoming links will know that already
+			ArrayList<SSSNode> allSecuredPCs = SSSNodesWithCommonProperty.getAllNodesWithPredicate(StaticSSSNodes.SecuredBy);
+			
+			//if so, then lock it.
+			if (allSecuredPCs.contains(locationsNode)){
+				locked=true;
+			} else {
+				locked = false;
+			}
+			
+			
+		}
+		
+		
+		
+		
 		BackCol = col;
-		this.networkNode=networkNode;
+		this.networkNode=locationsNode;
 				
-		knownLocations.put(networkNode, this);
+		knownLocations.put(locationsNode, this);
       
 	}
 
@@ -145,7 +182,7 @@ private void createLayout(String CurrentLocation) {
 			    
 			    
 	//  Left.add(new Button("TaskBar"));
-	  Taskbar maintaskbar  = new Taskbar(this);
+	   maintaskbar  = new Taskbar(this);
 	  Left.add(maintaskbar);
 	  
 	 //    Background colorBg = Background.solid(Color.argb(255, 255, 20, 0));
@@ -157,7 +194,6 @@ private void createLayout(String CurrentLocation) {
 						      new Button("east"));
 		  
 	     //Button middleContents = new Button("Contents");
-	     emailpage = new Email();
 	     Group middleContents=  emailpage.createIface();     
 	     
 	     middleContents.setConstraint(AxisLayout.stretched());
@@ -167,30 +203,36 @@ private void createLayout(String CurrentLocation) {
 	     
 	    
 	     //create all pages hidden
-	     nodepage = new LocationDetailsViewer();
-	     nodepage.Hide();
-	     
-	 //    linkpage = new Links();
+	     securityPage.Hide();
+	     contents.Hide();
 	     linkpage.Hide();
 	     
 	  Group Center = new Group(AxisLayout.vertical().offStretch().stretchByDefault()).
 			    setConstraint(BorderLayout.CENTER);
 	  
+	  
+	  //add all the possible middle pages
 	  Center.add(middleContents);	  
-	  
-	  //add all the other pages
-	  Center.add(nodepage);
+	  Center.add(securityPage);
 	  Center.add(linkpage);
+	  Center.add(contents);
 	  
-	  //show the default page
-	  gotoEmail();
+	  //we correct taskbar locked icon status	 status
+	  maintaskbar.setSecurityIconOn(locked);
 	  
+	  
+	  //show the security page by default if locked, else we goto the link page
+	  if (locked) {
+		  gotoSecurity();
+	  } else {
+		  gotoLinks();
+	  }
 	  
 	     Background centerbg = Background.solid(Color.argb(255, 44, 255, 0));
 	     Center.addStyles(Style.BACKGROUND.is(centerbg));
 	     
 	  mainLayout.add(Top);
-	  mainLayout.add(Bottom);
+	 // mainLayout.add(Bottom);
 	  mainLayout.add(Left);
 	  //mainLayout.add(Right);
 		  
@@ -291,29 +333,46 @@ private void loadNodesData(SSSNode mycomputerdata) {
 }
 
 
+public  void gotoSecurity() {
+  	
+	  CurrentlyOpen.Hide();
+  	securityPage.Show();
+	  CurrentlyOpen=securityPage;	
+}
 
 public  void gotoLinks() {
 	  
-	
+	 if (!locked) {
 	  CurrentlyOpen.Hide();
 	  linkpage.Show();
 	  CurrentlyOpen=linkpage;	
+	 }
 }
 
 public  void gotoNodeViewer() {
-		
+	 if (!locked) {
 	  CurrentlyOpen.Hide();
-	  nodepage.Show();
-	  CurrentlyOpen=nodepage;	
+	  securityPage.Show();
+	  CurrentlyOpen=securityPage;	
+	 }
 }
 
 public  void gotoEmail() {
 	  
-	
+	 if (!locked) {
 	  CurrentlyOpen.Hide();
 	  emailpage.Show();
 	  CurrentlyOpen=emailpage;	
+	 }
 }
+public  void gotoContents() {
+	  if (!locked) {
+	  CurrentlyOpen.Hide();
+	  contents.Show();
+	  CurrentlyOpen=contents;	
+	  }
+}
+
 
 
 
@@ -324,7 +383,7 @@ public static NetworkLocationScreen getNetworkNode(int cyan, SSSNode linksToThis
 
 	if (existingLocation==null) {		
 		//if theres none already existing we try creating a new one
-		existingLocation = new NetworkLocationScreen( cyan,  linksToThisPC);
+		existingLocation = new NetworkLocationScreen( cyan, linksToThisPC);
 
 	} else {
 		
@@ -342,7 +401,7 @@ public void paint (Clock clock) {
 @Override 
 public void update (int delta) {
     super.update(delta);
-    nodepage.update(delta);
+    securityPage.update(delta);
     
 }
 

@@ -99,10 +99,13 @@ public class Link extends Group {
 					 scan();
 					break;
 				case Locked:
+					//as we already know its locked, we could probably
+					//put a flag here to stop a re-check later?
+					MeshExplorer.gotoLocation(linksToThisPC);
 					break;
 				case Open:
+					//but probably not here - a locked pc deserves a double checked no?
 					MeshExplorer.gotoLocation(linksToThisPC);
-					
 					break;
 				case Scanning:
 					break;

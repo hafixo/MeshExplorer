@@ -28,7 +28,7 @@ import tripleplay.util.Colors;
 import tripleplay.util.StyledText;
 import tripleplay.util.TextStyle;
 
-public class LocationDetailsViewer extends DraggablesPanel  implements Software {
+public class LocationSecurityCracker extends DraggablesPanel  implements Software {
 	 ImageLayer testimage;
 	 Label label = new Label("test lab");
 	 Label label2 = new Label("test lab3");
@@ -36,11 +36,10 @@ public class LocationDetailsViewer extends DraggablesPanel  implements Software 
 	/** will provide basic system information for the current location.
 	 *  ImageLayer testimage
 	 * currently used as a widget/tripleplay testing ground for stuff */
-	public LocationDetailsViewer() {
+	 
+	public LocationSecurityCracker() {
 		
-		super();
-		
-		
+		super();	
 		super.addElement(label,50,50);
 		
 	//	super.addElement(label2,50,5);

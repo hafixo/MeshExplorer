@@ -56,7 +56,7 @@ public class MeshExplorer extends Game.Default {
 	  
 	  
 	  static Email emailpage;
-	  static LocationDetailsViewer nodepage;
+	  static LocationSecurityCracker nodepage;
 	//  static Links linkpage= new Links();
 	  
 	  static Software CurrentlyOpen = emailpage;
