@@ -131,4 +131,11 @@ public class Links extends Group implements Software {
 		addLink(newlink);
 	}
 
+
+	public void clearLinks() {
+		super.removeAll();
+
+		super.add(title);
+	}
+
 }

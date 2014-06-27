@@ -18,5 +18,5 @@ MaxsFirewall me:queryPass "(query text here - anything matching this query break
 MaxsFirewall me:clueText "Hint here".
 MaxsFirewall me:textPass "Password12345".
 
-alicespccontents.txt rdfs:subClassOf me:software
-alicespccontents.txt me:ison alicespc
+alicespccontents.txt rdfs:subClassOf me:software.
+alicespccontents.txt me:ison alicespc.

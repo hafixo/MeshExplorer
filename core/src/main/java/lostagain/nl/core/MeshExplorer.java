@@ -40,6 +40,7 @@ import tripleplay.ui.Stylesheet;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.BorderLayout;
 import tripleplay.util.Colors;
+import lostagain.nl.core.SSSNodes.PlayersStartingLocation;
 import lostagain.nl.core.gui.*;
 
 import com.darkflame.client.interfaces.SSSGenericFileManager;
@@ -67,9 +68,9 @@ public class MeshExplorer extends Game.Default {
 	  
 	private SSSGenericFileManager platformSpecificFileLoader;
 	  
+
 	
 	public final static String INTERNALNS = "http://darkflame.co.uk/meshexplorer#";
-	public static SSSNode mycomputerdata = SSSNode.createSSSNode("HomeMachine",INTERNALNS);
 
 	/** Used to tell if the player is at their home pc **/
 	private static boolean isAtHome=true;
@@ -242,7 +243,7 @@ public class MeshExplorer extends Game.Default {
   private void loadFirstPC() {
 	  
 	  
-		MeshExplorer.gotoLocation(mycomputerdata);
+		MeshExplorer.gotoLocation(PlayersStartingLocation.computersuri);
 		
 		//we have to update the bar specially for the first pc
 		_screens.top().wasShown();
@@ -369,7 +370,7 @@ public static void gotoLocation(SSSNode linksToThisPC) {
 	  //The user is considered to be home straight away, if they are heading home
 	  // we dont wait till after the "push" animation
       // because the "new network node" being created makes use of this variable
-	  if (linksToThisPC.equals(mycomputerdata)){
+	  if (linksToThisPC.equals(PlayersStartingLocation.computersuri)){
 		  isAtHome = true;
 	  } else {
 		  isAtHome = false;		  
@@ -399,7 +400,7 @@ public static void gotoLocation(SSSNode linksToThisPC) {
 
 public static void gotoHomeNode() {
 	
-	 gotoLocation(mycomputerdata);
+	 gotoLocation(PlayersStartingLocation.computersuri);
 	 
 	
 }

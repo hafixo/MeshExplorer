@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import javax.swing.SpringLayout.Constraints;
 
+import lostagain.nl.core.SSSNodes.PlayersStartingLocation;
 import lostagain.nl.core.gui.Email;
 import lostagain.nl.core.gui.Links;
 import lostagain.nl.core.gui.LocationSecurityCracker;
@@ -83,7 +84,7 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 		//first we work out if this page is locked or not
 		
 		//if its the home computer it is always unlocked
-		if (locationsNode == MeshExplorer.mycomputerdata){
+		if (locationsNode == PlayersStartingLocation.computersuri){
 			locked = false;
 		} else {
 			
@@ -275,9 +276,22 @@ private void createLayout(String CurrentLocation) {
 	     
 	 //    graphics().rootLayer().add(root.layer);
 }
+protected void populateContents(ArrayList<SSSNode> testresult) {
 	
+	Log.info("_____________contents:  "+testresult.size());
+	
+	for (SSSNode sssNode : testresult) {
+		
+		contents.addObjectFile(sssNode);
+		
+		
+	}
+	
+	
+}
 protected void populateVisibleComputers(ArrayList<SSSNode> testresult) {
 	Log.info("computers visible to this = "+testresult.size());
+	linkpage.clearLinks();
 	
 	for (SSSNode sssNode : testresult) {
 		
@@ -288,12 +302,47 @@ protected void populateVisibleComputers(ArrayList<SSSNode> testresult) {
 	
 	
 }
+/** gets the content of the supplied location **/
+private void getContentOfMachine(SSSNode tothisnode){
+	
+	SSSNodesWithCommonProperty contentOfMACHINE =  SSSNodesWithCommonProperty.getSetFor(StaticSSSNodes.isOn, tothisnode); //.getAllNodesInSet(callback);
 
+    Query realQuery = new Query(" ison=alicespc ");
+    
+	DoSomethingWithNodesRunnable callback2 = new DoSomethingWithNodesRunnable(){
+
+		@Override
+		public void run(ArrayList<SSSNode> testresult, boolean invert) {
+			if (testresult.size()>0){
+			Log.warning("populate contents");
+			 populateContents(testresult);
+			}
+							
+		}
+		
+	};
+	
+  //  QueryEngine.processQuery(realQuery, false, null, callback2);
+    
+	if (contentOfMACHINE!=null){
+
+		Log.warning("getting contents:"+contentOfMACHINE.isLoaded);
+		Log.warning("getting contents:"+contentOfMACHINE.getCommonPrec()+":"+contentOfMACHINE.getCommonValue());
+		Log.warning("getting contents:"+contentOfMACHINE.getSourceFiles().toString());
+		Log.warning("getting contents:"+contentOfMACHINE.getLefttoLoad() );
+		
+		contentOfMACHINE.getAllNodesInSet(callback2);
+	}
+	
+	
+}
+
+/** gets the locations visible to the supplied location **/
 private void getVisibleMachines(SSSNode tothisnode){
 	   
-	String allNodes = SSSNode.getAllKnownNodes().toString();
+	//String allNodes = SSSNode.getAllKnownNodes().toString();
 	
-	Log.info("all nodes"+allNodes.toString());
+	//Log.info("all nodes"+allNodes.toString());
 
 
 	Log.info("---------------------------------------------------------------===================----------------");
@@ -326,9 +375,14 @@ private void getVisibleMachines(SSSNode tothisnode){
 private void loadNodesData(SSSNode mycomputerdata) {
 	  System.out.print("loading node:"+mycomputerdata);
 	  // get the data for this node
+	    
 	  
 	  //first load the links visible to this one
 	  getVisibleMachines(mycomputerdata);
+	  
+	  //then contents
+	  getContentOfMachine(mycomputerdata);
+	  
 	  
 }
 
@@ -336,7 +390,7 @@ private void loadNodesData(SSSNode mycomputerdata) {
 public  void gotoSecurity() {
   	
 	  CurrentlyOpen.Hide();
-  	securityPage.Show();
+  securityPage.Show();
 	  CurrentlyOpen=securityPage;	
 }
 

@@ -61,7 +61,7 @@ public class Taskbar extends Group {
 		
 		securityButton = addButton(parent, lockediconloc,new UnitSlot() {
 	        @Override public void onEmit () {
-	        	parent.gotoLinks();
+	        	parent.gotoSecurity();
 	        }
 	    });
 		
