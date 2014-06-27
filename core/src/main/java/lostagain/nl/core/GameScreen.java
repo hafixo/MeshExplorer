@@ -19,7 +19,9 @@ public abstract class GameScreen extends UIScreen
 
     @Override public void wasAdded () {
         super.wasAdded();
+        
         _root = iface.createRoot(createLayout(), stylesheet(), layer);
+        
      //  _root.addStyles(Style.BACKGROUND.is(background()));
         _root.setSize(width(), height());
         createIface();
@@ -64,7 +66,7 @@ public abstract class GameScreen extends UIScreen
 
     /** Creates the layout for the interface root. The default is a vertical axis layout. */
     protected Layout createLayout () {
-        return AxisLayout.vertical();
+        return AxisLayout.vertical().offStretch();
     }
 
     /** Override this method and create your UI in it. Add elements to {@link #_root}. */

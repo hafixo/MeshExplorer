@@ -258,7 +258,7 @@ private void createLayout(String CurrentLocation) {
      
     //  _root.addStyles(Style.BACKGROUND.is(bg));
       
-	_root.setConstraint(AxisLayout.stretched());
+	//_root.setConstraint(AxisLayout.stretched());
       
 	 //   Label test=    new Label("PlayN Demos:");
 	    
@@ -268,7 +268,7 @@ private void createLayout(String CurrentLocation) {
 	    
 	  //  layer.add(root.layer);
 
-      _root.add(0, mainLayout);
+      _root.add( mainLayout);
       
 	   //  root.add(0,_root);
 	     
