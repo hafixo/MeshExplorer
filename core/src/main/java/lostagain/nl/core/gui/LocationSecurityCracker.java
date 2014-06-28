@@ -1,6 +1,13 @@
 package lostagain.nl.core.gui;
 
 import static playn.core.PlayN.log;
+
+import java.util.ArrayList;
+
+import com.darkflame.client.semantic.SSSNode;
+import com.darkflame.client.semantic.SSSNodesWithCommonProperty;
+import com.darkflame.client.semantic.QueryEngine.DoSomethingWithNodesRunnable;
+
 import playn.core.CanvasImage;
 import playn.core.Font;
 import playn.core.GroupLayer;
@@ -12,6 +19,8 @@ import playn.core.util.Clock;
 import pythagoras.f.Point;
 import pythagoras.i.IRectangle;
 import pythagoras.i.Rectangle;
+import lostagain.nl.core.StaticSSSNodes;
+import lostagain.nl.core.SSSNodes.PlayersStartingLocation;
 import lostagain.nl.core.interfaces.Software;
 import tripleplay.anim.Flicker;
 import tripleplay.ui.Background;
@@ -29,10 +38,7 @@ import tripleplay.util.StyledText;
 import tripleplay.util.TextStyle;
 
 public class LocationSecurityCracker extends DraggablesPanel  implements Software {
-	 ImageLayer testimage;
-	 Label label = new Label("test lab");
-	 Label label2 = new Label("test lab3");
-	 Label label3 = new Label("test lab4");
+
 	/** will provide basic system information for the current location.
 	 *  ImageLayer testimage
 	 * currently used as a widget/tripleplay testing ground for stuff */
@@ -40,21 +46,18 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 	public LocationSecurityCracker() {
 		
 		super();	
-		super.addElement(label,50,50);
+		
+		
+		getUsersInventorys();
+		//super.addElement(label,50,50);
 		
 	//	super.addElement(label2,50,5);
-		 CanvasImage image = PlayN.graphics().createImage(100, 100);
-         StringBuffer text = new StringBuffer();
-         text.append("la la la");
-         
-          final TextStyle TEXT = new TextStyle().
-        	        withFont(PlayN.graphics().createFont("Helvetiva", Font.Style.PLAIN, 72));
-         StyledText.span(text.toString(), TEXT).render(image.canvas(), 0, 0);
-          testimage = PlayN.graphics().createImageLayer(image);
+		
         
          //super.layer.addAt(testimage, 0, 60);
-    
-		super.addElement(label2,50,150);
+      
+          /*
+
 		
 		
 		//add a region as an expirement
@@ -66,7 +69,7 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 		
 		super.addRegion(testRestrictionR, "rightbox");
 		
-		super.restrictElementTo(label2, "leftbox");
+		super.restrictElementTo(testimage, "leftbox");
 		
 		super.addDropListenerToRegion("leftbox",new DropListener() {			
 			@Override
@@ -85,81 +88,61 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 				log().info("dropped on rightbox!");
 			}
 		});
-/*
-		
-		
-		 super.layer.addListener(_flicker);
-		 _flicker.reset(500, 500);
-		 _flicker.positionChanged(50, 50);
-		 
-		 super.layer.setHitTester(new Layer.HitTester() {
-	            public Layer hitTest (Layer layer, Point p) {
 
-	          		 log().info("hit tester");
-	          		 
-	                return layer;//(p.x < 500) ? layer : null;
-	            }
-	        });
-		 
-		//spacer.setConstraint(new AbsoluteLayout.Constraint(position.point.get(), origin.point.get()));
-		 CanvasImage image = PlayN.graphics().createImage(100, 100);
-         StringBuffer text = new StringBuffer();
-         text.append("la la la");
-         
-          final TextStyle TEXT = new TextStyle().
-        	        withFont(PlayN.graphics().createFont("Helvetiva", Font.Style.PLAIN, 72));
-         StyledText.span(text.toString(), TEXT).render(image.canvas(), 0, 0);
-          testimage = PlayN.graphics().createImageLayer(image);
-        
-         //super.layer.addAt(testimage, 0, 60);
-          super.add(label);
-		
-          label.setConstraint(Constraints.fixedSize(100, 50));
-		
-		
-		//super.layer.addListener(_flicker);
 		*/
 		
 	}
 
-	/*
-	protected XYFlicker _flicker = new XYFlicker() {
-		
-        @Override protected float friction () { return 0.001f; }
-        
-       
-        @Override 
-        public void onPointerStart (Pointer.Event event) {
-        	
-        	super.onPointerStart(event);        	
-
-   		// log().info("onPointerStart");
-   		 
-        }
-        @Override         
-        public void update (float delta) {
-        	// log().info("update "+super._position.x+" "+super._min.x+" "+super._max.x);
-        	 super.update(delta);
-        	 
-        }
-    };*/
 	
 
-    /** Prepares the stroller for the next frame, at t = t + delta. 
-    public void update (float delta) {
-        _flicker.update(delta);
-        
-       // testimage.setTranslation(_flicker.position().x(),_flicker.position().y());
-        
-        
-    	AbsoluteLayout.at(label, -_flicker.position().x(),-_flicker.position().y());
-        
-    	//layer.setTranslation(_flicker.position().x(), _flicker.position().y());
-    	
-		// log().info("_flicker.position"+_flicker.position().x()+","+
-			//	 super.layer.interactive());
-    }
-    */
+	public void addUsersInventory(SSSNode item,int x,int y){
+		
+		ImageLayer newinventory = super.addTextIcon(item.getPLabel(), x, y);
+		
+		
+	}
+	
+	
+	public void addUsersInventorys(ArrayList<SSSNode> contents){
+		
+		for (SSSNode item : contents) {
+			
+			int rx = (int) (Math.random() * 200); 
+			int ry =(int) (Math.random() * 200);
+			
+			addUsersInventory(item,  rx,  ry);
+			
+			
+		}
+		
+	}
+	
+	public void getUsersInventorys(){
+		
+		SSSNodesWithCommonProperty contentOfMACHINE =  SSSNodesWithCommonProperty.getSetFor(StaticSSSNodes.isOn, PlayersStartingLocation.computersuri); //.getAllNodesInSet(callback);
+
+
+		DoSomethingWithNodesRunnable doThisAfter = new DoSomethingWithNodesRunnable(){
+
+			@Override
+			public void run(ArrayList<SSSNode> testresult, boolean invert) {
+				log().info("populate contents");
+				addUsersInventorys(testresult);
+				}
+								
+			
+			
+		};
+		
+		
+		
+		
+		if (contentOfMACHINE!=null){
+			contentOfMACHINE.getAllNodesInSet(doThisAfter);
+		}
+		
+	}
+	
 	@Override
 	public void onOpen() {
 		// TODO Auto-generated method stub

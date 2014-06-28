@@ -3,6 +3,7 @@ package lostagain.nl.core;
 import static playn.core.PlayN.*;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.darkflame.client.SuperSimpleSemantics;
@@ -86,6 +87,13 @@ public class MeshExplorer extends Game.Default {
   @Override
   public void init() {
 	  
+	  Log.setLevel(Level.OFF);
+	  Logger.getLogger("sss.DemoKnowledgeBase").setLevel(Level.OFF);
+	  Logger.getLogger("sss.SSSNodesWithCommonProperty").setLevel(Level.OFF);
+	  Logger.getLogger("sss.DemoKnowledgeBase").setLevel(Level.OFF);
+	  Logger.getLogger("sss.SSSNode").setLevel(Level.OFF);
+	  Logger.getLogger("sss.QueryEngine").setLevel(Level.OFF);
+	  Logger.getLogger("sss.JavaFileManager").setLevel(Level.OFF);
 	  
 	  SuperSimpleSemantics.setFileManager(platformSpecificFileLoader);	  
 	  

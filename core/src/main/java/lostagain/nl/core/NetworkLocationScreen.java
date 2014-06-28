@@ -307,7 +307,7 @@ private void getContentOfMachine(SSSNode tothisnode){
 	
 	SSSNodesWithCommonProperty contentOfMACHINE =  SSSNodesWithCommonProperty.getSetFor(StaticSSSNodes.isOn, tothisnode); //.getAllNodesInSet(callback);
 
-    Query realQuery = new Query(" ison=alicespc ");
+    //Query realQuery = new Query(" ison=alicespc ");
     
 	DoSomethingWithNodesRunnable callback2 = new DoSomethingWithNodesRunnable(){
 
