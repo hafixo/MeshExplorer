@@ -456,9 +456,9 @@ public  void gotoLinks() {
 
 public  void gotoNodeViewer() {
 	 if (!locked) {
-	  CurrentlyOpen.Hide();
-	  securityPage.Show();
-	  CurrentlyOpen=securityPage;	
+	//  CurrentlyOpen.Hide();
+	 // securityPage.Show();
+	//  CurrentlyOpen=securityPage;	
 	 }
 }
 
@@ -522,6 +522,14 @@ public boolean apply(Screen screen) {
 	}
 	
 	return false;
+}
+
+
+public void unlockComputer() {
+
+	locked = false;
+	 maintaskbar.setSecurityIconOn(locked);
+	 
 }
 
 }

@@ -12,6 +12,7 @@ import com.darkflame.client.semantic.SSSNodesWithCommonProperty;
 import com.darkflame.client.semantic.QueryEngine.DoSomethingWithNodesRunnable;
 
 import playn.core.CanvasImage;
+import playn.core.Color;
 import playn.core.Font;
 import playn.core.Gradient;
 import playn.core.GroupLayer;
@@ -19,6 +20,7 @@ import playn.core.ImageLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Pointer;
+import playn.core.util.Callback;
 import playn.core.util.Clock;
 import pythagoras.f.Point;
 import pythagoras.i.IRectangle;
@@ -28,6 +30,7 @@ import lostagain.nl.core.StaticSSSNodes;
 import lostagain.nl.core.SSSNodes.PlayersStartingLocation;
 import lostagain.nl.core.gui.DraggablesPanel.DragItem;
 import lostagain.nl.core.interfaces.Software;
+import lostagain.nl.core.utilities.GameTimer;
 import tripleplay.anim.Flicker;
 import tripleplay.ui.Background;
 import tripleplay.ui.Constraints;
@@ -47,9 +50,12 @@ import tripleplay.util.TextStyle;
 public class LocationSecurityCracker extends DraggablesPanel  implements Software {
 
 	private static final String INVENTORYREGION ="InventoryRegion";
-	SSSNode locationProtectedByThis;
+	NetworkLocationScreen locationProtectedByThis;
+	
 	private SSSNode securedBy;
 	ImageLayer VisualGuide;
+
+	CanvasImage greenback;
 	CanvasImage blueback;
 	CanvasImage redback;
 	
@@ -71,7 +77,7 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 		
 		
 		super();	
-		locationProtectedByThis = networkLocationScreen.networkNode;
+		locationProtectedByThis = networkLocationScreen;
 		this.securedBy = securedBy;
 		
 		
@@ -131,18 +137,24 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 					float cameFromY) {
 					
 				
-				log().info("dropped on drag target!");
 				SSSNode ItemNode = (SSSNode) justdroppeditem.data;
 				log().info("~item uri="+ItemNode.getPURI());
 				//test
 				
 				if (acceptableAnswers.contains(ItemNode)){
+					
+					locationProtectedByThis.unlockComputer();
+					
 					log().info( "contains:"+acceptableAnswers.contains(ItemNode));
 					acceptedAnsAnimation();
+					
+					//remove movement restriction
+					LocationSecurityCracker.this.removeElementsRestriction(justdroppeditem);
+							
+					
 				} else {
 					
-					rejectedAnsAnimation();
-					
+					rejectedAnsAnimation();		
 					
 				}
 			
@@ -156,6 +168,7 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 		//create backgrounds for visual guide 
 		blueback = createBlueBack(droptargetregion);		
 		redback = createRedBack(droptargetregion);
+		greenback =  createAcceptedBack(droptargetregion);
 		
 		//add the same region as a visual guide		
 		VisualGuide = PlayN.graphics().createImageLayer(blueback); 
@@ -167,7 +180,18 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 	}
 
 
-
+private CanvasImage createAcceptedBack(Rectangle droptargetregion) {
+		
+		CanvasImage blueback = PlayN.graphics().createImage(droptargetregion.width, droptargetregion.height);
+		
+		Gradient grad =  PlayN.graphics().createRadialGradient(50,25, 50, new int[]{Colors.GREEN,Color.rgb(30,200,100)},new float[]{0,1});
+		blueback.canvas().setFillGradient(grad);		 				
+		blueback.canvas().fillRect(0, 0, droptargetregion.width, droptargetregion.height);
+		blueback.setRepeat(true, true);
+		
+		return blueback;
+		
+	}
 	private CanvasImage createBlueBack(Rectangle droptargetregion) {
 		
 		CanvasImage blueback = PlayN.graphics().createImage(droptargetregion.width, droptargetregion.height);
@@ -372,10 +396,29 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 		
 		VisualGuide.setImage(redback);
 		
+		//delay before going back to norm
+		GameTimer resetcolor = new GameTimer(550, new Callback<String>(){
+
+			@Override
+			public void onSuccess(String result) {
+				VisualGuide.setImage(blueback);
+				
+			}
+
+			@Override
+			public void onFailure(Throwable cause) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		resetcolor.start();
+		
 	}
 	private void acceptedAnsAnimation() {
 		
-		VisualGuide.setImage(blueback);
+		VisualGuide.setImage(greenback);
 		
 	}
 	@Override
