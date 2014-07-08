@@ -20,3 +20,10 @@ MaxsFirewall me:textPass "Password12345".
 
 alicespccontents.txt rdfs:subClassOf me:software.
 alicespccontents.txt me:ison alicespc.
+
+isFruit.txt rdfs:subClassOf Fruit.
+
+isMore_Green.txt http://dbpedia.org/ontology/Colour Green;
+	      			         "color" "green".
+	      			         
+isColor_Green.txt http://dbpedia.org/ontology/Colour Green.

@@ -49,6 +49,9 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 	private static final String INVENTORYREGION ="InventoryRegion";
 	SSSNode locationProtectedByThis;
 	private SSSNode securedBy;
+	ImageLayer VisualGuide;
+	CanvasImage blueback;
+	CanvasImage redback;
 	
 	ArrayList<DragItem> allItems = new ArrayList<DragItem>();
 	
@@ -120,7 +123,7 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 
 
 	private void addAnswerDropTarget() {
-		Rectangle droptargetregion = new Rectangle(400,0,100,100);
+		Rectangle droptargetregion = new Rectangle(400,10,100,100);
 		super.addRegion(droptargetregion, "droptargetregion");
 		super.addDropListenerToRegion( "droptargetregion",new DropListener() {			
 			@Override
@@ -132,27 +135,64 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 				SSSNode ItemNode = (SSSNode) justdroppeditem.data;
 				log().info("~item uri="+ItemNode.getPURI());
 				//test
-				log().info( "contains:"+acceptableAnswers.contains(ItemNode));
 				
+				if (acceptableAnswers.contains(ItemNode)){
+					log().info( "contains:"+acceptableAnswers.contains(ItemNode));
+					acceptedAnsAnimation();
+				} else {
+					
+					rejectedAnsAnimation();
+					
+					
+				}
+			
 				
 				
 			}
+
 		});
 		
-		//add the same region as a visual guide
-		Gradient grad =  PlayN.graphics().createRadialGradient(50,25, 50, new int[]{Colors.CYAN,Colors.BLUE},new float[]{0,1});
-		CanvasImage back = PlayN.graphics().createImage(droptargetregion.width, droptargetregion.height);
-		back.canvas().setFillGradient(grad);		 				
-		back.canvas().fillRect(0, 0, droptargetregion.width, droptargetregion.height);
-		back.setRepeat(true, true);
-		ImageLayer testimage = PlayN.graphics().createImageLayer(back); 
 		
-	    DragItem newItem = new DragItem(testimage,null);
+		//create backgrounds for visual guide 
+		blueback = createBlueBack(droptargetregion);		
+		redback = createRedBack(droptargetregion);
+		
+		//add the same region as a visual guide		
+		VisualGuide = PlayN.graphics().createImageLayer(blueback); 
+		
+	    DragItem newItem = new DragItem(VisualGuide,null);
 	    
-		super.addElement(newItem, 400, 0, false);
+		super.addElement(newItem, 400, 10, false);
 		
 	}
 
+
+
+	private CanvasImage createBlueBack(Rectangle droptargetregion) {
+		
+		CanvasImage blueback = PlayN.graphics().createImage(droptargetregion.width, droptargetregion.height);
+		
+		Gradient grad =  PlayN.graphics().createRadialGradient(50,25, 50, new int[]{Colors.CYAN,Colors.BLUE},new float[]{0,1});
+		blueback.canvas().setFillGradient(grad);		 				
+		blueback.canvas().fillRect(0, 0, droptargetregion.width, droptargetregion.height);
+		blueback.setRepeat(true, true);
+		
+		return blueback;
+		
+	}
+
+	private CanvasImage createRedBack(Rectangle droptargetregion) {
+		
+		CanvasImage blueback = PlayN.graphics().createImage(droptargetregion.width, droptargetregion.height);
+		
+		Gradient grad =  PlayN.graphics().createRadialGradient(50,25, 50, new int[]{Colors.RED,Colors.PINK},new float[]{0,1});
+		blueback.canvas().setFillGradient(grad);		 				
+		blueback.canvas().fillRect(0, 0, droptargetregion.width, droptargetregion.height);
+		blueback.setRepeat(true, true);
+		
+		return blueback;
+		
+	}
 
 
 	private void setAsLocked() {
@@ -224,14 +264,13 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 		
 		DoSomethingWithNodesRunnable RunWhenDone = new DoSomethingWithNodesRunnable(){
 
-
 			@Override
 			public void run(ArrayList<SSSNode> newnodes, boolean invert) {
 				
 				acceptableAnswers.clear();
 				acceptableAnswers.addAll(newnodes);
 				
-				log().info(acceptableAnswers.toString());
+				log().info("answers="+acceptableAnswers.toString());
 				
 				//flag as ready for answer
 				readyForAnswer = true;
@@ -268,7 +307,6 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 		int i=0; //item number
 		for (SSSNode item : contents) {
 			
-			i++;
 			int rx =0;
 			int ry =0;
 			
@@ -281,7 +319,8 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 			}
 			
 			addUsersInventory(item,  rx+disX,  ry+disY);
-			
+
+			i++;
 			
 		}
 		
@@ -328,6 +367,17 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 		
 	}
 
+
+	private void rejectedAnsAnimation() {
+		
+		VisualGuide.setImage(redback);
+		
+	}
+	private void acceptedAnsAnimation() {
+		
+		VisualGuide.setImage(blueback);
+		
+	}
 	@Override
 	public void Show() {
 		onOpen();
