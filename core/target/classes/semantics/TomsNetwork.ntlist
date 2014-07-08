@@ -14,7 +14,7 @@ thecatspc me:visibleTo me:everyone.
 
 maxspc me:SecuredBy MaxsFirewall.
 MaxsFirewall rdfs:subClassOf  me:Security.
-MaxsFirewall me:queryPass "(query text here - anything matching this query breaks the firewall)".
+MaxsFirewall me:queryPass "Color=Green Fruit".
 MaxsFirewall me:clueText "Hint here".
 MaxsFirewall me:textPass "Password12345".
 

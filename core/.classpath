@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SuperSimpleSemantics"/>
 	<classpathentry kind="src" output="target/classes" path="src/main/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
@@ -23,6 +24,6 @@
 			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/SuperSimpleSemantics"/>
+	<classpathentry exported="true" kind="lib" path="W:/Users/Tom/workspace/meshexplorer/SSS.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

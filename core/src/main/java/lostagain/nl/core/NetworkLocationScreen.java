@@ -59,7 +59,7 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 	 Taskbar maintaskbar;
 	 
 	//various pages on this computer
-	 LocationSecurityCracker securityPage  = new LocationSecurityCracker();
+	 LocationSecurityCracker securityPage;
 	 Email emailpage  = new Email();	  
 	 Links linkpage= new Links(this);
 	 LocationsContents contents = new LocationsContents(this);
@@ -68,9 +68,11 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 	  Software CurrentlyOpen = emailpage;
 
 
-	private SSSNode networkNode;
+	public SSSNode networkNode;
+	
 
-	Boolean locked = true; //while its locked you can only access the security page
+	public Boolean locked = true; //while its locked you can only access the security page
+	
 	
 	
 
@@ -86,8 +88,16 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 		//if its the home computer it is always unlocked
 		if (locationsNode == PlayersStartingLocation.computersuri){
 			locked = false;
-		} else {
+
+			securityPage = new LocationSecurityCracker(this,null); 
 			
+		} else {
+
+			  //load the security, if any  
+			  getSecurity(locationsNode);
+			  
+			  
+			  /*
 			//we check if its got security associated with it
 			//we could optimise to skip this check if  we already know its secured
 			//incoming links will know that already
@@ -95,11 +105,11 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 			
 			//if so, then lock it.
 			if (allSecuredPCs.contains(locationsNode)){
-				locked=true;
+				locked = true;
 			} else {
 				locked = false;
 			}
-			
+			*/
 			
 		}
 		
@@ -139,6 +149,10 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
         
         //always needs to be updated
   	  updatetopbar();
+  	  
+  	  //update security
+  	securityPage.clearInventorys();
+  	securityPage.getUsersInventorys();
 		
     }
 
@@ -204,6 +218,7 @@ private void createLayout(String CurrentLocation) {
 	     
 	    
 	     //create all pages hidden
+	   // securityPage= new LocationSecurityCracker(this); 
 	     securityPage.Hide();
 	     contents.Hide();
 	     linkpage.Hide();
@@ -374,8 +389,9 @@ private void getVisibleMachines(SSSNode tothisnode){
 }
 private void loadNodesData(SSSNode mycomputerdata) {
 	  System.out.print("loading node:"+mycomputerdata);
+	  
 	  // get the data for this node
-	    
+	  
 	  
 	  //first load the links visible to this one
 	  getVisibleMachines(mycomputerdata);
@@ -387,20 +403,55 @@ private void loadNodesData(SSSNode mycomputerdata) {
 }
 
 
+
+private void getSecurity(SSSNode mycomputerdata) {
+	
+	locked = false;
+	SSSNode securedBy = null;
+	
+	HashSet<SSSNodesWithCommonProperty> sets = SSSNodesWithCommonProperty.getCommonPropertySetsContaining(mycomputerdata.getPURI());
+	
+	for (SSSNodesWithCommonProperty sssNodesWithCommonProperty : sets) {
+		
+		if (sssNodesWithCommonProperty.getCommonPrec()==StaticSSSNodes.SecuredBy){
+			
+			securedBy = sssNodesWithCommonProperty.getCommonValue();
+			Log.info("security found:"+securedBy.getPURI());
+			
+			locked = true;
+			break;
+		}
+		
+	}
+	
+	securityPage = new LocationSecurityCracker(this,securedBy); 
+	
+	//find this machines security
+	
+	
+	
+}
+
+
 public  void gotoSecurity() {
   	
 	  CurrentlyOpen.Hide();
-  securityPage.Show();
+	  securityPage.Show();
 	  CurrentlyOpen=securityPage;	
 }
 
 public  void gotoLinks() {
 	  
 	 if (!locked) {
+		 
 	  CurrentlyOpen.Hide();
 	  linkpage.Show();
 	  CurrentlyOpen=linkpage;	
+	  
+	  
 	 }
+	 
+	 
 }
 
 public  void gotoNodeViewer() {
@@ -439,12 +490,15 @@ public static NetworkLocationScreen getNetworkNode(int cyan, SSSNode linksToThis
 		//if theres none already existing we try creating a new one
 		existingLocation = new NetworkLocationScreen( cyan, linksToThisPC);
 
+
+
 	} else {
 		
 	}
 	
 	return existingLocation;
 }
+
 
 @Override 
 public void paint (Clock clock) {
