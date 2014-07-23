@@ -7,23 +7,32 @@
 maxspc rdfs:subClassOf  me:Computer.
 alicespc rdfs:subClassOf  me:Computer.
 thecatspc rdfs:subClassOf  me:Computer.
+BobsOutpost  rdfs:subClassOf  me:Computer.
 
 maxspc me:visibleTo me:everyone.
 alicespc me:visibleTo thecatspc.
-thecatspc me:visibleTo me:everyone.
+thecatspc me:visibleTo BobsOutpost.
+BobsOutpost me:visibleTo me:everyone.
 
 maxspc me:SecuredBy MaxsFirewall.
 MaxsFirewall rdfs:subClassOf  me:Security.
-MaxsFirewall me:queryPass "Color=Green Fruit".
+MaxsFirewall me:queryPass "Fruit Color=Green".
 MaxsFirewall me:clueText "Hint here".
 MaxsFirewall me:textPass "Password12345".
 
 alicespccontents.txt rdfs:subClassOf me:software.
 alicespccontents.txt me:ison alicespc.
 
+alicesemailindex.txt rdfs:subClassOf me:messages.
+alicesemailindex.txt me:ison alicespc.
+
+thecatspc.txt rdfs:subClassOf me:software.
+thecatspc.txt me:ison thecatspc.
+
+isApple.txt rdfs:subClassOf Apple.
 isFruit.txt rdfs:subClassOf Fruit.
+	      			         
+isColor_Green.txt http://dbpedia.org/ontology/Colour Green.
 
 isMore_Green.txt http://dbpedia.org/ontology/Colour Green;
 	      			         "color" "green".
-	      			         
-isColor_Green.txt http://dbpedia.org/ontology/Colour Green.

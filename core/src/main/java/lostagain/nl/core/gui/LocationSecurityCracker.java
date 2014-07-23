@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.darkflame.client.query.Query;
+import com.darkflame.client.query.QueryElement;
 import com.darkflame.client.semantic.QueryEngine;
 import com.darkflame.client.semantic.SSSNode;
 import com.darkflame.client.semantic.SSSNodesWithCommonProperty;
@@ -68,6 +69,8 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 	public ArrayList<SSSNode> acceptableAnswers = new ArrayList<SSSNode>();
 
 	private boolean readyForAnswer = false; //is true when everything is loaded and is ready to accept an answer
+	private DragItem LockedText;
+	private DragItem RequirementsText;
 	
 	/** displays the cracking minigame necessary to access a location.
 	 * if already open, displays locations stats 
@@ -87,7 +90,7 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 			setAsLocked();
 			
 		} else {
-			super.addText("COMPUTER UNLOCKED : ",150,40, 10,10,false);
+			setAsUnlocked();
 		}
 		
         
@@ -128,6 +131,29 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 
 
 
+	private void setAsUnlocked() {
+		
+		//add to players data as unlocked
+		if (!(locationProtectedByThis.networkNode==null)){
+			PlayersStartingLocation.addUnlockedLink(locationProtectedByThis.networkNode);
+		}
+		
+		//remove existing text if present
+		if (LockedText!=null){
+			super.removeIcon(LockedText);
+			super.removeIcon(RequirementsText);
+		}
+		
+		//add unlocked message and details
+		super.addText("COMPUTER UNLOCKED : ",150,40, 10,10,false);
+		
+		
+		
+		
+	}
+
+
+
 	private void addAnswerDropTarget() {
 		Rectangle droptargetregion = new Rectangle(400,10,100,100);
 		super.addRegion(droptargetregion, "droptargetregion");
@@ -147,7 +173,8 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 					
 					log().info( "contains:"+acceptableAnswers.contains(ItemNode));
 					acceptedAnsAnimation();
-					
+					setAsUnlocked();
+					 
 					//remove movement restriction
 					LocationSecurityCracker.this.removeElementsRestriction(justdroppeditem);
 							
@@ -222,9 +249,10 @@ private CanvasImage createAcceptedBack(Rectangle droptargetregion) {
 	private void setAsLocked() {
 		//me:queryPass
 		//add interface elements (non-dragable)
-		super.addText("COMPUTER LOCKED : ",150,40, 10,10,false);
-		super.addText("Requirements Not Yet Met:",350,40,  10, 40,false);
+		 LockedText = super.addText("COMPUTER LOCKED : ",150,40, 10,10,false);
+		 RequirementsText = super.addText("Requirements Not Yet Met:",350,40,  10, 40,false);
 		
+		 
 		//get protection string
 		HashSet<SSSNodesWithCommonProperty> securitysPropertys = SSSNodesWithCommonProperty.getCommonPropertySetsContaining(securedBy.PURI);
 		
@@ -358,25 +386,42 @@ private CanvasImage createAcceptedBack(Rectangle droptargetregion) {
 		}
 		
 	}
+	
+	
 	public void getUsersInventorys(){
 		
 		SSSNodesWithCommonProperty contentOfMACHINE =  SSSNodesWithCommonProperty.getSetFor(StaticSSSNodes.isOn, PlayersStartingLocation.computersuri); //.getAllNodesInSet(callback);
-
-
+	
+		//We can also use a query, but we dont as its slower
+		
+	//	Query contentOfMachine = new Query(StaticSSSNodes.isOn.PURI+"="+PlayersStartingLocation.computersuri.PURI);
+				
 		DoSomethingWithNodesRunnable doThisAfter = new DoSomethingWithNodesRunnable(){
 
 			@Override
 			public void run(ArrayList<SSSNode> testresult, boolean invert) {
+				ArrayList<SSSNode> softwarelist = new ArrayList<SSSNode>();
+								
+				for (SSSNode itemOnMachine : testresult) {
+					
+					if (itemOnMachine.isOrHasDirectParentClass(StaticSSSNodes.software.PURI)){
+		
+						softwarelist.add(itemOnMachine);
+					}
+					
+					
+				}
+				
 				log().info("populate contents");
-					addUsersInventorys(testresult,false);
+					addUsersInventorys(softwarelist,false);
 				}
 								
 			
 			
 		};
 		
-		
-		
+		//QueryEngine.processQuery(contentOfMachine, false, null, doThisAfter);
+				
 		
 		if (contentOfMACHINE!=null){
 			contentOfMACHINE.getAllNodesInSet(doThisAfter);

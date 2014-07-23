@@ -76,6 +76,8 @@ public class MeshExplorer extends Game.Default {
 	/** Used to tell if the player is at their home pc **/
 	private static boolean isAtHome=true;
 
+	private static NetworkLocationScreen currentlyOpenLocation;
+
 	  
   public MeshExplorer(SSSGenericFileManager platformSpecificFileLoader) {
     super(33); // call update every 33ms (30 times per second)
@@ -88,12 +90,13 @@ public class MeshExplorer extends Game.Default {
   public void init() {
 	  
 	  Log.setLevel(Level.OFF);
+	  
 	  Logger.getLogger("sss.DemoKnowledgeBase").setLevel(Level.OFF);
 	  Logger.getLogger("sss.SSSNodesWithCommonProperty").setLevel(Level.OFF);
 	  Logger.getLogger("sss.DemoKnowledgeBase").setLevel(Level.OFF);
 	  Logger.getLogger("sss.SSSNode").setLevel(Level.OFF);
 	  Logger.getLogger("sss.QueryEngine").setLevel(Level.OFF);
-	  Logger.getLogger("sss.JavaFileManager").setLevel(Level.OFF);
+	 // Logger.getLogger("sss.JavaFileManager").setLevel(Level.OFF);
 	  
 	  SuperSimpleSemantics.setFileManager(platformSpecificFileLoader);	  
 	  
@@ -116,9 +119,8 @@ public class MeshExplorer extends Game.Default {
 	  trustedIndexs.add("\\semantics\\TomsNetwork.ntlist");
   	  SuperSimpleSemantics.loadIndexsAt(trustedIndexs);
   	  
-	  
-	  
-	  
+
+    	
 //	 final SSSNode Wood = SSSNode.getNodeByLabel("Wood");
 //	System.out.print(Wood.getDirectParentsAsString());
 	
@@ -249,14 +251,16 @@ public class MeshExplorer extends Game.Default {
 //  
   
   private void loadFirstPC() {
-	  
+
+	  	PlayersStartingLocation.setup();
 	  
 		MeshExplorer.gotoLocation(PlayersStartingLocation.computersuri);
 		
 		//we have to update the bar specially for the first pc
-		_screens.top().wasShown();
-	  
-	 // loadNodesData(mycomputerdata);
+		currentlyOpenLocation.wasShown();
+		currentlyOpenLocation.gotoEmail();
+		
+		
   }
 
  /*
@@ -387,16 +391,19 @@ public static void gotoLocation(SSSNode linksToThisPC) {
 	  //get the node screen.
 	  //This will automatically check if it already exists
 	  //else it will create a new one
-	  NetworkLocationScreen screen1 = NetworkLocationScreen.getNetworkNode(Colors.CYAN,linksToThisPC);	
+	  NetworkLocationScreen screen = NetworkLocationScreen.getNetworkNode(Colors.CYAN,linksToThisPC);	
+	  currentlyOpenLocation = screen;
+	  
+	  
 	  
 	  //find is the screen exists, if it does, we display it
-	  if (_screens.find(screen1)!=null){
+	  if (_screens.find(screen)!=null){
 		  
-		  _screens.popTo(screen1);		  
+		  _screens.popTo(screen);		  
 		  
 	  } else {
 		  //else we add it to the screenstack at the top so its automatically displayed
-		  _screens.push(screen1);
+		  _screens.push(screen);
 		  
 	  }
 	  

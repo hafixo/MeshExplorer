@@ -12,6 +12,7 @@ import javax.swing.SpringLayout.Constraints;
 
 import lostagain.nl.core.SSSNodes.PlayersStartingLocation;
 import lostagain.nl.core.gui.Email;
+import lostagain.nl.core.gui.MessagesPage;
 import lostagain.nl.core.gui.Links;
 import lostagain.nl.core.gui.LocationSecurityCracker;
 import lostagain.nl.core.gui.LocationsContents;
@@ -60,12 +61,17 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 	 
 	//various pages on this computer
 	 LocationSecurityCracker securityPage;
-	 Email emailpage  = new Email();	  
+	 //Email emailpage  = new Email();	 
+	 
+	 MessagesPage emailpage = new MessagesPage(this);
+	 
 	 Links linkpage= new Links(this);
-	 LocationsContents contents = new LocationsContents(this);
+	 
+	 LocationsContents locationsfiles = new LocationsContents(this);
+	 
 	 
 	 //page currently open
-	  Software CurrentlyOpen = emailpage;
+	  Software CurrentlyOpenPage = emailpage;
 
 
 	public SSSNode networkNode;
@@ -151,8 +157,11 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
   	  updatetopbar();
   	  
   	  //update security
-  	securityPage.clearInventorys();
-  	securityPage.getUsersInventorys();
+  	  securityPage.clearInventorys();
+  	  securityPage.getUsersInventorys();
+  	
+  	  //update contents
+  	  getContentOfMachine(networkNode);
 		
     }
 
@@ -162,7 +171,7 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 		log().info("UPDATING bar to "+networkNode.getPLabel());
 		
 		MeshExplorer.NavigationTopBar.setLocation(networkNode.getPLabel());  	 
-	Top.add( MeshExplorer.NavigationTopBar);
+		Top.add( MeshExplorer.NavigationTopBar);
 	
 	
 	}
@@ -209,18 +218,17 @@ private void createLayout(String CurrentLocation) {
 						      new Button("east"));
 		  
 	     //Button middleContents = new Button("Contents");
-	     Group middleContents=  emailpage.createIface();     
+	     //Group emailpageiface =  emailpage.createIface();     
 	     
-	     middleContents.setConstraint(AxisLayout.stretched());
+	  //   emailpageiface.setConstraint(AxisLayout.stretched());
 	     
 	     emailpage.Hide();
-	     CurrentlyOpen=emailpage;
+	     CurrentlyOpenPage=emailpage;
 	     
 	    
 	     //create all pages hidden
-	   // securityPage= new LocationSecurityCracker(this); 
 	     securityPage.Hide();
-	     contents.Hide();
+	     locationsfiles.Hide();
 	     linkpage.Hide();
 	     
 	  Group Center = new Group(AxisLayout.vertical().offStretch().stretchByDefault()).
@@ -228,10 +236,10 @@ private void createLayout(String CurrentLocation) {
 	  
 	  
 	  //add all the possible middle pages
-	  Center.add(middleContents);	  
+	  Center.add(emailpage);	  
 	  Center.add(securityPage);
 	  Center.add(linkpage);
-	  Center.add(contents);
+	  Center.add(locationsfiles);
 	  
 	  //we correct taskbar locked icon status	 status
 	  maintaskbar.setSecurityIconOn(locked);
@@ -292,13 +300,32 @@ private void createLayout(String CurrentLocation) {
 	 //    graphics().rootLayer().add(root.layer);
 }
 protected void populateContents(ArrayList<SSSNode> testresult) {
+	//clear existing lists
+	locationsfiles.removeAll();
+	
+	Log.info("removing emails ");
+	emailpage.removeAllMessages();
+	
 	
 	Log.info("_____________contents:  "+testresult.size());
 	
 	for (SSSNode sssNode : testresult) {
 		
-		contents.addObjectFile(sssNode);
+		if (sssNode.isOrHasParentClass(StaticSSSNodes.software.getPURI())){
 		
+			locationsfiles.addObjectFile(sssNode);
+		
+		}
+		
+		
+		if (sssNode.isOrHasParentClass(StaticSSSNodes.messages.getPURI())){
+
+			Log.info(" adding email");
+			emailpage.addEmailLocation(sssNode);
+		
+		}
+		
+
 		
 	}
 	
@@ -328,9 +355,20 @@ private void getContentOfMachine(SSSNode tothisnode){
 
 		@Override
 		public void run(ArrayList<SSSNode> testresult, boolean invert) {
+			
 			if (testresult.size()>0){
+				
+				//remove duplicates by using an HashSet
+				// add elements to al, including duplicates
+				HashSet hs = new HashSet();
+				hs.addAll(testresult);
+				testresult.clear();
+				testresult.addAll(hs);
+				
 			Log.warning("populate contents");
 			 populateContents(testresult);
+			 
+			 
 			}
 							
 		}
@@ -373,6 +411,9 @@ private void getVisibleMachines(SSSNode tothisnode){
 
 		@Override
 		public void run(ArrayList<SSSNode> testresult, boolean invert) {
+			
+			
+			
 			Log.warning("populateVisibleComputers");
 			 populateVisibleComputers(testresult);
 			 
@@ -409,7 +450,14 @@ private void getSecurity(SSSNode mycomputerdata) {
 	locked = false;
 	SSSNode securedBy = null;
 	
+	Log.info("getting security for:"+mycomputerdata.PURI);
+	
+	
 	HashSet<SSSNodesWithCommonProperty> sets = SSSNodesWithCommonProperty.getCommonPropertySetsContaining(mycomputerdata.getPURI());
+	
+
+	Log.info("sets:"+sets.size());
+
 	
 	for (SSSNodesWithCommonProperty sssNodesWithCommonProperty : sets) {
 		
@@ -435,18 +483,22 @@ private void getSecurity(SSSNode mycomputerdata) {
 
 public  void gotoSecurity() {
   	
-	  CurrentlyOpen.Hide();
+	  CurrentlyOpenPage.Hide();
 	  securityPage.Show();
-	  CurrentlyOpen=securityPage;	
+
+	  maintaskbar.highlight(maintaskbar.securityButton);
+	  CurrentlyOpenPage=securityPage;	
 }
 
 public  void gotoLinks() {
 	  
 	 if (!locked) {
 		 
-	  CurrentlyOpen.Hide();
+	  CurrentlyOpenPage.Hide();
 	  linkpage.Show();
-	  CurrentlyOpen=linkpage;	
+
+	  maintaskbar.highlight(maintaskbar.networkButton);
+	  CurrentlyOpenPage=linkpage;	
 	  
 	  
 	 }
@@ -465,16 +517,26 @@ public  void gotoNodeViewer() {
 public  void gotoEmail() {
 	  
 	 if (!locked) {
-	  CurrentlyOpen.Hide();
+		 
+	  CurrentlyOpenPage.Hide();
+	  
 	  emailpage.Show();
-	  CurrentlyOpen=emailpage;	
+
+	  maintaskbar.highlight(maintaskbar.messageButton);
+	  
+	  CurrentlyOpenPage=emailpage;	
 	 }
 }
 public  void gotoContents() {
+	
 	  if (!locked) {
-	  CurrentlyOpen.Hide();
-	  contents.Show();
-	  CurrentlyOpen=contents;	
+		  
+
+		  maintaskbar.highlight(maintaskbar.softwareButton);
+      	
+	  CurrentlyOpenPage.Hide();
+	  locationsfiles.Show();
+	  CurrentlyOpenPage=locationsfiles;	
 	  }
 }
 
@@ -528,7 +590,11 @@ public boolean apply(Screen screen) {
 public void unlockComputer() {
 
 	locked = false;
-	 maintaskbar.setSecurityIconOn(locked);
+	maintaskbar.setSecurityIconOn(locked);
+	
+	if (!(networkNode==null)){
+		PlayersStartingLocation.addUnlockedLink(networkNode);
+	}
 	 
 }
 

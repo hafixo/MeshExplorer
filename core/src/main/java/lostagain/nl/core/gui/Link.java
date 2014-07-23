@@ -1,11 +1,13 @@
 package lostagain.nl.core.gui;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import com.darkflame.client.semantic.SSSNode;
 import com.darkflame.client.semantic.SSSNodesWithCommonProperty;
 
 import playn.core.Color;
+import playn.core.Log;
 import react.UnitSlot;
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
@@ -23,9 +25,12 @@ import pythagoras.f.IDimension;
 import pythagoras.f.Point;
 import lostagain.nl.core.MeshExplorer;
 import lostagain.nl.core.StaticSSSNodes;
+import lostagain.nl.core.SSSNodes.PlayersStartingLocation;
 
 public class Link extends Group {
 
+	static Logger Log = Logger.getLogger("Link");
+	
 	Button gotoLinkButton;
 	String Location = "";
 	String LinkName = "";
@@ -77,21 +82,26 @@ public class Link extends Group {
         //        new Dimension(50, 50)));
 			
 	//	super.setConstraint(AxisLayout.stretched());
-		super.setStyles(Style.BACKGROUND.is(Background.solid(Color.argb(255, 250,50, 55))));
 		
+		//default back
+		super.setStyles(Style.BACKGROUND.is(Background.solid(Color.argb(255, 250,50, 55))));
 		
 		Location = location;
 		LinkName = name;
 
 		gotoLinkButton = new Button(UNKNOWEN+location);
 		
+		gotoLinkButton.setConstraint(AxisLayout.stretched());
+		
+		
 		gotoLinkButton.setStyles(Style.BACKGROUND.is(Background.blank()));
 		
 		gotoLinkButton.clicked().connect(new UnitSlot() {
-			@Override public void onEmit () {
+			@Override 
+			public void onEmit () {
 
-
-			
+				Log.info("trying to go to:"+linksToThisPC.toString());
+							
 
 				switch (currentMode)
 				{
@@ -122,13 +132,26 @@ public class Link extends Group {
 		super.add(AbsoluteLayout.at(ProgressBar, 0, 0,50,20));
 		
 		super.add(AbsoluteLayout.at(gotoLinkButton, 50, 5));
+
+		Log.info(":"+linksToThisPC.toString());
+		
+		if (ComputerOpen){
+			refreshBasedOnMode();
+		}	
+		
 	}
 
 	public Link(SSSNode sssNode, Links parent) {
 		
 		super(new AbsoluteLayout());
+		
 		linksToThisPC=sssNode;
-		setup(sssNode.getPLabel(),sssNode.getPURI(),parent, false);	
+		
+
+		//check if already known to be open
+		Boolean unlocked = PlayersStartingLocation.isLinkUnlockedByPlayer(linksToThisPC);
+		
+		setup(sssNode.getPLabel(),sssNode.getPURI(),parent, unlocked);	
 		
 	}
 
@@ -217,6 +240,7 @@ public class Link extends Group {
 
 	private void scanComplete() {
 		ComputerOpen = true;
+		
 		//detect if its secured by anything 
 		if (linksToThisPC!=null){
 			
@@ -224,11 +248,22 @@ public class Link extends Group {
 			
 			if (allSecuredPCs.contains(linksToThisPC)){
 				ComputerOpen = false;
+			} else {
+				
+				//add too unlocked list
+				PlayersStartingLocation.addUnlockedLink(linksToThisPC);
+				
 			}
 						
 		}
+
+			refreshBasedOnMode();
 		
 		
+		
+	}
+
+	private void refreshBasedOnMode() {
 		if (!ComputerOpen){
 			currentMode = LinkMode.Locked;
 			setLockedStyle();
@@ -238,8 +273,5 @@ public class Link extends Group {
 			setOpenStyle();
 			gotoLinkButton.text.update(Location);
 		}
-
-		
-		
 	}
 }

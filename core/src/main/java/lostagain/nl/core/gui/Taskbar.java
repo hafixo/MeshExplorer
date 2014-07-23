@@ -9,6 +9,7 @@ import react.UnitSlot;
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Group;
+import tripleplay.ui.IconEffect;
 import tripleplay.ui.ImageButton;
 import tripleplay.ui.Style;
 import tripleplay.ui.Style.HAlign;
@@ -32,7 +33,13 @@ public class Taskbar extends Group {
         public boolean isStretch () { return _stretch; }
     }
     */
-	ImageButton securityButton;
+	public ImageButton securityButton;
+	public ImageButton messageButton;
+	public ImageButton softwareButton;
+	
+	
+	public ImageButton shortcutButton;
+	public ImageButton networkButton;
 	
 
 	String lockediconloc = "images/locked.png";
@@ -62,34 +69,44 @@ public class Taskbar extends Group {
 		securityButton = addButton(parent, lockediconloc,new UnitSlot() {
 	        @Override public void onEmit () {
 	        	parent.gotoSecurity();
+
 	        }
 	    });
 		
 		String emailiconloc = "images/email.png";
-		addButton(parent, emailiconloc,new UnitSlot() {
+		messageButton = addButton(parent, emailiconloc,new UnitSlot() {
 	        @Override public void onEmit () {
 	        	parent.gotoEmail();
+
 	        }
 	    });
 
 		String contentsiconloc = "images/contents.png";
-		addButton(parent, contentsiconloc,new UnitSlot() {
+		softwareButton = addButton(parent, contentsiconloc,new UnitSlot() {
 	        @Override public void onEmit () {
 	        	parent.gotoContents();
+	        	
+	        	
+	        	
 	        }
+
 	    });
 		
+		/*
 		String shortcuticonloc = "images/shortcut.png";
-		 addButton(parent, shortcuticonloc,new UnitSlot() {
+		shortcutButton= addButton(parent, shortcuticonloc,new UnitSlot() {
 		        @Override public void onEmit () {
 		        	parent.gotoNodeViewer();
 		        }
-		    });
+		    });*/
+		
 
 			String networkiconloc = "images/network.png";
-			addButton(parent, networkiconloc,new UnitSlot() {
+			networkButton=	addButton(parent, networkiconloc,new UnitSlot() {
 		        @Override public void onEmit () {
 		        	parent.gotoLinks();
+		        	
+
 		        }
 		    });
 			 
@@ -97,6 +114,21 @@ public class Taskbar extends Group {
 	
 	}
 	
+	public void highlight(ImageButton button) {
+		
+		//un highlight all
+		securityButton.addStyles(Style.BACKGROUND.is(Background.solid(0)));		
+		messageButton.addStyles(Style.BACKGROUND.is(Background.solid(0)));		
+		softwareButton.addStyles(Style.BACKGROUND.is(Background.solid(0)));		
+		networkButton.addStyles(Style.BACKGROUND.is(Background.solid(0)));
+				 
+		//width
+		button.addStyles(Style.BACKGROUND.is(Background.solid(Colors.GREEN)));
+		
+		
+		
+	}
+
 	public void setSecurityIconOn(Boolean status){
 		
 		if (status){
