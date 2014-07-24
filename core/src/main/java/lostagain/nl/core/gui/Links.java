@@ -36,12 +36,13 @@ public class Links extends Group implements Software {
 		
 		super(AxisLayout.vertical().gap(15).offStretch());
 		super.setConstraint(AxisLayout.stretched());
-		super.setStyles(Style.BACKGROUND.is(Background.solid(Color.argb(255, 50,50, 155))));
+		super.setStyles(GamesStyles.GameNetworkBackground);//Style.BACKGROUND.is(Background.solid(Color.argb(255, 50,50, 155))));
 		
-		 Styles tableStyles = Styles.make(Style.BACKGROUND.is(Background.bordered(Color.argb(0, 0, 0, 0),Colors.WHITE,3)),
-		            Style.VALIGN.top);
+		// Styles tableStyles = Styles.make(Style.BACKGROUND.is(Background.bordered(Color.argb(0, 0, 0, 0),Colors.WHITE,3)),
+		   //         Style.VALIGN.top);
 		 
-		 super.addStyles(tableStyles);
+		super.addStyles(Style.VALIGN.top);
+		title.addStyles(Style.COLOR.is(GamesStyles.standardTextColor));
 		
 		super.add(title);
 		

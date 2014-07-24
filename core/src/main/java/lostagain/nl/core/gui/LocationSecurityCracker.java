@@ -80,6 +80,8 @@ public class LocationSecurityCracker extends DraggablesPanel  implements Softwar
 		
 		
 		super();	
+		super.addStyles(GamesStyles.GameSecurityBackground);
+		
 		locationProtectedByThis = networkLocationScreen;
 		this.securedBy = securedBy;
 		

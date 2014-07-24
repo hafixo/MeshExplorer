@@ -59,7 +59,7 @@ public class Link extends Group {
 
 		//super(AxisLayout.horizontal().gap(5));
 		super(new AbsoluteLayout());
-
+		
 		setup(name, location, parent, ComputerOpen);	
 		
 		

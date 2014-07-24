@@ -1,9 +1,15 @@
 package lostagain.nl.core.gui;
 
 import static playn.core.PlayN.assets;
+import static playn.core.PlayN.log;
 import lostagain.nl.core.NetworkLocationScreen;
+import playn.core.Canvas;
+import playn.core.CanvasImage;
 import playn.core.Color;
+import playn.core.Font;
 import playn.core.Image;
+import playn.core.PlayN;
+import playn.core.util.Callback;
 import react.Slot;
 import react.UnitSlot;
 import tripleplay.ui.Background;
@@ -12,29 +18,23 @@ import tripleplay.ui.Group;
 import tripleplay.ui.IconEffect;
 import tripleplay.ui.ImageButton;
 import tripleplay.ui.Style;
+import tripleplay.ui.Style.Binding;
 import tripleplay.ui.Style.HAlign;
 import tripleplay.ui.Styles;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
 import tripleplay.util.Colors;
+import tripleplay.util.StyledText;
+import tripleplay.util.TextStyle;
+import tripleplay.util.StyledText.Block;
 
 public class Taskbar extends Group {
-/*
-    Group layout;
-    static class ExposedColumn extends TableLayout.Column
-    {
-        public ExposedColumn (Style.HAlign halign, boolean stretch, float weight, float minWidth) {
-            super(halign, stretch, weight, minWidth);
-          
-        }
-        public Style.HAlign halign () { return _halign; }
-        public float weight () { return _weight; }
-        public float minWidth () { return _minWidth; }
-        public boolean isStretch () { return _stretch; }
-    }
-    */
+
 	public ImageButton securityButton;
+	
+	String emailiconloc = "images/email.png";
 	public ImageButton messageButton;
+	
 	public ImageButton softwareButton;
 	
 	
@@ -73,7 +73,7 @@ public class Taskbar extends Group {
 	        }
 	    });
 		
-		String emailiconloc = "images/email.png";
+		
 		messageButton = addButton(parent, emailiconloc,new UnitSlot() {
 	        @Override public void onEmit () {
 	        	parent.gotoEmail();
@@ -114,7 +114,7 @@ public class Taskbar extends Group {
 	
 	}
 	
-	public void highlight(ImageButton button) {
+	public void highlight(ImageButton button, Binding<Background> backstyle) {
 		
 		//un highlight all
 		securityButton.addStyles(Style.BACKGROUND.is(Background.solid(0)));		
@@ -123,7 +123,7 @@ public class Taskbar extends Group {
 		networkButton.addStyles(Style.BACKGROUND.is(Background.solid(0)));
 				 
 		//width
-		button.addStyles(Style.BACKGROUND.is(Background.solid(Colors.GREEN)));
+		button.addStyles(backstyle);
 		
 		
 		
@@ -141,10 +141,53 @@ public class Taskbar extends Group {
 		
 	}
 	
+	/** visibly display the number of messages at this location **/
+	public void setNumberOfMessages(final int Num){
+		
+		Image icon = assets().getImage(emailiconloc).subImage(0,0, 64, 64);
+		
+		icon.addCallback(new Callback<Image>() {
+
+			@Override
+			public void onSuccess(Image result) {
+				
+				//add number
+			
+				 CanvasImage image = PlayN.graphics().createImage(64, 64);
+				
+				 Canvas context = image.canvas();
+				 
+				 
+				 context.drawImage(result, 0, 0);
+				 
+			   // TextStyle TEXT = new TextStyle().
+		       // withFont(PlayN.graphics().createFont("Helvetiva", Font.Style.PLAIN, 10));
+
+			    context.drawText(""+Num, 42, 42);
+			    
+			    messageButton.setUp(image);
+			}
+
+			@Override
+			public void onFailure(Throwable cause) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			
+			
+		});
+		
+	    
+		 //Block blockoftext = StyledText.block(text.toString(), TEXT,canvasWidth); 
+		 
+		// blockoftext.render(context, tlx,tly+(leftover/2));
+		
+	}
 
 private ImageButton addButton(final NetworkLocationScreen parent, String iconloc, UnitSlot response) {
-	Image icon = assets().getImage(iconloc).subImage(0,0, 64, 64);
 	
+	Image icon = assets().getImage(iconloc).subImage(0,0, 64, 64);
 	
 	 ImageButton newButton = new ImageButton(icon);
 	

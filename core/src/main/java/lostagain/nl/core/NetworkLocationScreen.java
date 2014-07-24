@@ -12,6 +12,7 @@ import javax.swing.SpringLayout.Constraints;
 
 import lostagain.nl.core.SSSNodes.PlayersStartingLocation;
 import lostagain.nl.core.gui.Email;
+import lostagain.nl.core.gui.GamesStyles;
 import lostagain.nl.core.gui.MessagesPage;
 import lostagain.nl.core.gui.Links;
 import lostagain.nl.core.gui.LocationSecurityCracker;
@@ -63,11 +64,11 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 	 LocationSecurityCracker securityPage;
 	 //Email emailpage  = new Email();	 
 	 
-	 MessagesPage emailpage = new MessagesPage(this);
+	 MessagesPage emailpage;
 	 
-	 Links linkpage= new Links(this);
+	 Links linkpage;
 	 
-	 LocationsContents locationsfiles = new LocationsContents(this);
+	 LocationsContents locationsfiles;
 	 
 	 
 	 //page currently open
@@ -88,7 +89,13 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 	  
 	private NetworkLocationScreen(int col,SSSNode locationsNode) {		
 		super();
+		this.networkNode=locationsNode;
 		
+		//create all the pages for this screen
+		emailpage = new MessagesPage(this);
+		linkpage = new Links(this);
+		 locationsfiles = new LocationsContents(this);
+		 
 		//first we work out if this page is locked or not
 		
 		//if its the home computer it is always unlocked
@@ -123,7 +130,7 @@ public class NetworkLocationScreen extends GameScreen implements Predicate  {
 		
 		
 		BackCol = col;
-		this.networkNode=locationsNode;
+	
 				
 		knownLocations.put(locationsNode, this);
       
@@ -305,7 +312,7 @@ protected void populateContents(ArrayList<SSSNode> testresult) {
 	
 	Log.info("removing emails ");
 	emailpage.removeAllMessages();
-	
+	int emails=0;
 	
 	Log.info("_____________contents:  "+testresult.size());
 	
@@ -322,12 +329,16 @@ protected void populateContents(ArrayList<SSSNode> testresult) {
 
 			Log.info(" adding email");
 			emailpage.addEmailLocation(sssNode);
-		
+			
+			emails++;
 		}
 		
 
 		
 	}
+	
+	maintaskbar.setNumberOfMessages(emails);
+	
 	
 	
 }
@@ -486,7 +497,8 @@ public  void gotoSecurity() {
 	  CurrentlyOpenPage.Hide();
 	  securityPage.Show();
 
-	  maintaskbar.highlight(maintaskbar.securityButton);
+	  maintaskbar.highlight(maintaskbar.securityButton,GamesStyles.GameSecurityBackground);
+	  
 	  CurrentlyOpenPage=securityPage;	
 }
 
@@ -497,7 +509,8 @@ public  void gotoLinks() {
 	  CurrentlyOpenPage.Hide();
 	  linkpage.Show();
 
-	  maintaskbar.highlight(maintaskbar.networkButton);
+	  maintaskbar.highlight(maintaskbar.networkButton,GamesStyles.GameNetworkBackground);
+	  
 	  CurrentlyOpenPage=linkpage;	
 	  
 	  
@@ -522,7 +535,7 @@ public  void gotoEmail() {
 	  
 	  emailpage.Show();
 
-	  maintaskbar.highlight(maintaskbar.messageButton);
+	  maintaskbar.highlight(maintaskbar.messageButton,GamesStyles.GameMessageBackground);
 	  
 	  CurrentlyOpenPage=emailpage;	
 	 }
@@ -532,7 +545,7 @@ public  void gotoContents() {
 	  if (!locked) {
 		  
 
-		  maintaskbar.highlight(maintaskbar.softwareButton);
+		  maintaskbar.highlight(maintaskbar.softwareButton,GamesStyles.GameSoftwareBackground);
       	
 	  CurrentlyOpenPage.Hide();
 	  locationsfiles.Show();
@@ -541,7 +554,7 @@ public  void gotoContents() {
 }
 
 
-
+	
 
 public static NetworkLocationScreen getNetworkNode(int cyan, SSSNode linksToThisPC) {
 	
