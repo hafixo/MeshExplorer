@@ -3,6 +3,7 @@ package lostagain.nl.core;
 import static playn.core.PlayN.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,6 +73,8 @@ public class MeshExplorer extends Game.Default {
 
 	
 	public final static String INTERNALNS = "http://darkflame.co.uk/meshexplorer#";
+	public final static HashSet<String> knownDatabases = new HashSet<String>();
+	
 
 	/** Used to tell if the player is at their home pc **/
 	private static boolean isAtHome=true;
@@ -89,7 +92,6 @@ public class MeshExplorer extends Game.Default {
   @Override
   public void init() {
 	  
-	  Log.setLevel(Level.OFF);
 	  
 	  Logger.getLogger("sss.DemoKnowledgeBase").setLevel(Level.OFF);
 	  Logger.getLogger("sss.SSSNodesWithCommonProperty").setLevel(Level.OFF);
@@ -425,6 +427,37 @@ public static void gotoHomeNode() {
 public static boolean isHome() {
 	
 	return isAtHome;
+}
+
+public static Boolean checkForUnloadedDatabase(SSSNode linksToThisPC) {
+	String label = linksToThisPC.getPURI();
+
+	Log.info("testing uri:"+label);
+	
+	if (label.contains(".ntlist#")){
+	
+		Log.info("detected database");
+		String databaseurl = label.substring(0, label.indexOf("#"));
+		
+		Log.info("database url:"+databaseurl);
+		
+		//test if already loaded
+		if (!knownDatabases.contains(databaseurl)){
+
+			Log.info("_____________________database not loaded:");
+			SuperSimpleSemantics.loadIndexAt(databaseurl);
+			
+			knownDatabases.add(databaseurl);
+			
+			return true;
+		}
+		
+		
+
+	}
+	
+	
+	return false;
 }
 
 

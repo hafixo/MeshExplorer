@@ -151,11 +151,14 @@ public class Link extends Group {
 		//check if already known to be open
 		Boolean unlocked = PlayersStartingLocation.isLinkUnlockedByPlayer(linksToThisPC);
 		
+		
 		setup(sssNode.getPLabel(),sssNode.getPURI(),parent, unlocked);	
 		
 	}
 
 	private void scan(){
+		
+		Log.info("sc");
 		
 		currentMode = LinkMode.Scanning;
 		
@@ -166,6 +169,10 @@ public class Link extends Group {
 		ProgressBar.setStyles(Style.BACKGROUND.is(Background.solid(Color.argb(255, 250,50, 55))));
 
 
+		//check if needs a new database loaded
+		Boolean newDatabaseLoading=MeshExplorer.checkForUnloadedDatabase(linksToThisPC);
+		
+		
 		currentParent.startScanningLink(this);
 		
 

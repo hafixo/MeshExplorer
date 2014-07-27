@@ -4,6 +4,7 @@ import static playn.core.PlayN.log;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 import com.darkflame.client.query.Query;
 import com.darkflame.client.query.QueryElement;
@@ -50,6 +51,9 @@ import tripleplay.util.TextStyle;
 
 public class LocationSecurityCracker extends DraggablesPanel  implements Software {
 
+	
+	static Logger Log = Logger.getLogger("LocationSecurityCracker");
+	  
 	private static final String INVENTORYREGION ="InventoryRegion";
 	NetworkLocationScreen locationProtectedByThis;
 	
@@ -313,6 +317,9 @@ private CanvasImage createAcceptedBack(Rectangle droptargetregion) {
 	
 
 	private void retrieveAnswersAsycn(String protectionString) {
+		
+		Log.info("protectionString="+protectionString);
+		
 		
 		Query answers = new Query(protectionString);
 		
