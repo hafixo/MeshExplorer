@@ -1,3 +1,7 @@
+Note, Project super-seeded by ThomasWrobel/MeshExplorerGDX
+
+Old;
+
 MeshExplorer
 ============
 
