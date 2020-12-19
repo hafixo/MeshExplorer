@@ -14,7 +14,7 @@
   <name>MeshExplorer Metaproject</name>
 
   <properties>
-    <playn.version>1.8.5</playn.version>
+    <playn.version>1.9</playn.version>
   </properties>
 
   <profiles>
